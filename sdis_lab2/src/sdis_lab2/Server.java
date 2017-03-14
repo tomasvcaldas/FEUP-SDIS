@@ -19,89 +19,83 @@ public class Server {
 	private static int PLATESIZE = 8;
 	private static int REGISTER = 1;
 	private static int LOOKUP = 2;
-
+	private static int MAX_SIZE = 256;	
+	
 	public static void main(String[] args) throws IOException {
 		plates = new HashMap<String, String>();
 		String arguments[] = null;
-		while(!checkArguments(arguments)){
+		while (!checkArguments(arguments)) {
 			arguments = getArguments();
 		}
-		
-		DatagramSocket service_socket = new DatagramSocket(srv_port);
 
+		// Create service socket
+		DatagramSocket service_socket = new DatagramSocket(srv_port);
+		// create multicastsocket
 		MulticastSocket mcast_socket = new MulticastSocket(mcast_port);
-		mcast_socket.setTimeToLive(1);
+		mcast_socket.setTimeToLive(1);		//set TTL to 1 hop
+		// create multicast datagram packet
+		DatagramPacket mcast_packet = new DatagramPacket(("" + srv_port).getBytes(), (srv_port + "").getBytes().length,
+				mcast_addr, mcast_port);
 		
-		DatagramPacket mcast_packet = new DatagramPacket(("" + srv_port).getBytes(), (srv_port + "").getBytes().length, mcast_addr, mcast_port);
+		boolean status = true;		
 		
-		
-		boolean status = true;
-		
-		while(status){
+		while(status) {
 			mcast_socket.send(mcast_packet);
 			
 			//System.out.println("multicast:<" + mcast_addr + "><" + mcast_port + ">:<srvc_addr><" + srv_port + ">");
-			
+						
+			//set a timeout to receive
 			service_socket.setSoTimeout(1000);
-			
-			try{
-				receive_and_answer(service_socket);
-			} catch (SocketTimeoutException timeout_exception){
-				
+			try {
+				receiveRequestAndAnswerAccordingly(service_socket);
+			} catch (SocketTimeoutException timeout_exception) {
+				//System.out.println("Socket exception message: " + timeout_exception.getMessage());
 			}
 		}
-		
 		mcast_socket.close();
 		service_socket.close();
 	}
-	
-	public static void receive_and_answer(DatagramSocket service_socket) throws IOException{
-		byte[] request_buffer = new byte[256];
-		
+
+	private static void receiveRequestAndAnswerAccordingly(DatagramSocket service_socket) throws IOException {
+		// prepare to receive request
+		byte[] request_buffer = new byte[MAX_SIZE];
 		DatagramPacket service_packet = new DatagramPacket(request_buffer, request_buffer.length);
 		
 		service_socket.receive(service_packet);
 		
 		String request = new String(service_packet.getData(), 0, service_packet.getLength());
-		
-		String answer = getAnswer(request);
-		
-		request_buffer = new byte[256];
-		
+				
+		String answer = workoutAnswer(request);
+				
+		request_buffer = new byte[MAX_SIZE];
 		request_buffer = answer.getBytes();
 		InetAddress request_address = service_packet.getAddress();
 		int request_port = service_packet.getPort();
 		service_packet = new DatagramPacket(request_buffer, request_buffer.length, request_address, request_port);
 		service_socket.send(service_packet);
-		
 	}
-	
-	public static String getAnswer(String request){
-		int type = checkType(request);
-		
-		if(type == REGISTER){
+
+	private static String workoutAnswer(String request) {
+		int type = checkIfLookUpOrRegister(request);
+		if(type == REGISTER) {
 			String newPlate = getNewPlate(request);
 			String owner = getOwner(request);
 			plates.put(newPlate, owner);
-			
 			System.out.println("<REGISTER><" + newPlate + "><" + owner + ">");
-			
 			return (newPlate + " which owner is: " + owner);
-		} else if(type == LOOKUP){
+		} else if (type == LOOKUP) {
 			String plate = getPlate(request);
-			String owner = getOwner(request);
-			if (owner == null){
+			String owner = plates.get(plate);
+			if (owner == null) {
 				System.out.println("<LOOKUP><" + plate + ">::<Car owner not found>");
 				return "Car owner not found";
 			}
-			else{
-				System.out.println("<LOOKUP><" + plate + ">::<" + owner + ">");
-				return owner;
-			}
+			System.out.println("<LOOKUP><" + plate + ">::<" + owner + ">");
+			return owner;
 		} else
 			return "Car not found";
 	}
-	
+
 	private static String getPlate(String request) {
 		return request.substring("LOOKUP".length(), PLATESIZE + "LOOKUP".length());
 	}
@@ -113,8 +107,8 @@ public class Server {
 	private static String getNewPlate(String request) {
 		return request.substring("REGISTER".length(), PLATESIZE + "REGISTER".length());
 	}
-	
-	private static int checkType(String request) {
+
+	private static int checkIfLookUpOrRegister(String request) {
 		String register = "REGISTER";
 		String lookUp = "LOOKUP";
 		for (int i = 0; i < register.length(); i++) {
@@ -131,24 +125,8 @@ public class Server {
 		}
 		return 0;
 	}
-	
-	public static boolean checkArguments(String args[]){
-		if (args == null)
-			return false;
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals("")) {
-				System.out.println("Arguments error, expected: server_port multicast_address multicast_port");
-				return false;
-			}
-		}
-		if (args.length != 3) {
-			System.out.println("Arguments error, expected: server_port multicast_address multicast_port");
-			return false;
-		}
-		return true;
-	}
-	
-	public static String[] getArguments() throws UnknownHostException{
+
+	private static String[] getArguments() throws UnknownHostException {
 		System.out.println("Write your arguments as: [<srvc_port> <mcast_addr> <mcast_port>]");
 		@SuppressWarnings("resource")
 		Scanner s = new Scanner(System.in);
@@ -160,5 +138,21 @@ public class Server {
 		mcast_port = Integer.parseInt(tempo[2]);		
 		mcast_addr = InetAddress.getByName(tempo[1]);
 		return tempo;
+	}
+
+	private static boolean checkArguments(String[] args) {
+		if (args == null)
+			return false;
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("")) {
+				System.out.println("Arguments error, expected: [<srvc_port> <mcast_addr> <mcast_port>]");
+				return false;
+			}
+		}
+		if (args.length != 3) {
+			System.out.println("Arguments error, expected: [<srvc_port> <mcast_addr> <mcast_port>]");
+			return false;
+		}
+		return true;
 	}
 }
