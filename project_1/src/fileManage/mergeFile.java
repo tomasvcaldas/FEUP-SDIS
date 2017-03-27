@@ -1,4 +1,4 @@
-package proj;
+package fileManage;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

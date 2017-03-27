@@ -42,14 +42,14 @@ public class Server {
 		while(status) {
 			mcast_socket.send(mcast_packet);
 			
-			//System.out.println("multicast:<" + mcast_addr + "><" + mcast_port + ">:<srvc_addr><" + srv_port + ">");
+			System.out.println("multicast:<" + mcast_addr + "><" + mcast_port + ">:<srvc_addr><" + srv_port + ">");
 						
 			//set a timeout to receive
 			service_socket.setSoTimeout(1000);
 			try {
 				receiveRequestAndAnswerAccordingly(service_socket);
 			} catch (SocketTimeoutException timeout_exception) {
-				//System.out.println("Socket exception message: " + timeout_exception.getMessage());
+				System.out.println("Socket exception message: " + timeout_exception.getMessage());
 			}
 		}
 		mcast_socket.close();
