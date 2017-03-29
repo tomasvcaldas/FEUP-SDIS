@@ -10,12 +10,7 @@ public class Message{
 
   public Message(String body, String[] header_string){
     this.body = body;
-
-    this.header.version = header_string[1];
-    this.header.sender_id = header_string[2];
-    this.header.file_id = header_string[3];
-    this.header.chunkNumber = header_string[4];
-    this.header.replicationDegree = header_string[5];
+    this.header = new Header(header_string[1], header_string[2], header_string[3], header_string[4], header_string[5]);
   }
 
   public static Message getMessage(DatagramPacket packet){
