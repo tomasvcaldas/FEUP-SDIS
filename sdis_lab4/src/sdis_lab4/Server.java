@@ -1,4 +1,3 @@
-package sdis_lab4;
 
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
@@ -13,9 +12,7 @@ public class Server implements Hello {
     }
         
     public static void main(String args[]) {
-    	int i = 0;
-    	
-    	while(i != 0){
+
         
         try {
             Server obj = new Server();
@@ -30,6 +27,6 @@ public class Server implements Hello {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
         }
-    	}
+
     }
 }

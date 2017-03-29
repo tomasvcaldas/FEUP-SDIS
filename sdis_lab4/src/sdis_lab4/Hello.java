@@ -1,4 +1,4 @@
-package sdis_lab4;
+
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
