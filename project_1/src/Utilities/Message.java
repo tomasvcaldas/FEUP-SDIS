@@ -27,6 +27,14 @@ public class Message{
     return new Message(body, header_string);
   }
 
+  public Header getHeader(){
+    return this.header;
+  }
+
+  public String getBody(){
+    return this.body;
+  }
+
   public static void main(String[] args){
     byte[] b = "olaolaolaola".getBytes();
     //System.out.println(splitMessage(b));
