@@ -19,7 +19,7 @@ public class Channel {
 		this.port = Integer.parseInt(port);
 		this.multicastsocket = new MulticastSocket(this.port);
 		this.multicastsocket.setTimeToLive(1);
-		this.multicastsocket.joinGroup(address);
+		//this.multicastsocket.joinGroup(address);
 
 	}
 

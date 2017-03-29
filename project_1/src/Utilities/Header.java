@@ -3,9 +3,12 @@ package Utilities;
 import fileManage.MessageType;
 
 public class Header {
-	public static final MessageType type = null;
-	public static final String version = "1.0";
-	public static final String CRLF = "\r \n";   // 0xd ' ' 0xa
-	
+	public static final String CRLF = "\r\n";   // CR:0xd + LF:0xa
 
+	public MessageType type;
+	public String version;
+	public String sender_id;
+	public String file_id;
+	public String chunkNumber;
+	public String replicationDegree;
 }
