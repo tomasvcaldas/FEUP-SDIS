@@ -8,10 +8,14 @@ public class Message{
   private String body;
   private Header header;
 
-  Message(String body, Header header){
+  public Message(String body, String[] header_string){
     this.body = body;
-    this.header = header;
 
+    this.header.version = header_string[1];
+    this.header.sender_id = header_string[2];
+    this.header.file_id = header_string[3];
+    this.header.chunkNumber = header_string[4];
+    this.header.replicationDegree = header_string[5];
   }
 
   public static Message getMessage(DatagramPacket packet){
@@ -22,18 +26,10 @@ public class Message{
     int index_body = split_array[0].length() + 4;
     String body = new String(packet.getData(), index_body, packet.getLength());
 
-    String[] header = split_array[0].split("\\r");
-
-    /*
-    header.version = header[1];
-    Header.sender_id = header[2];
-    Header.file_id = header[3];
-    Header.chunkNumber = header[4];
-    Header.replicationDegree = header[5];
-  */
+    String[] header_string = split_array[0].split("\\r");
 
 
-    return new Message(body, header);
+    return new Message(body, header_string);
   }
 
   public static void main(String[] args){
