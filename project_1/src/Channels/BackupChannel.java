@@ -4,7 +4,11 @@ package Channels;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
+import Utilities.Header;
 import Utilities.Message;
+
+import fileManage.MessageType;
+
 public class BackupChannel extends Channel {
 
 	public BackupChannel(String backupAddress, String backupPort ) throws IOException{
@@ -20,19 +24,36 @@ public class BackupChannel extends Channel {
 					multicastsocket.joinGroup(address);
 					DatagramPacket newPacket = getMulticastData();
 					Message message = Message.getMessage(newPacket);
+					Header headerArgs = message.getHeader();
+					String msgBody = message.getBody();
+					byte[] body = msgBody.getBytes();
 
-
-
+					/*if(headerArgs.getSenderId() == /*server id){*/
+						if(headerArgs.getType() == MessageType.PUTCHUNK){
+							handlePutChunk(headerArgs,body);
+						}
+					//}
 					multicastsocket.leaveGroup(address);
 				} catch(Exception e){
 					e.printStackTrace();
-				}
+			}
 
 			}
 
 		}
 		
 	}
+
+	private void handlePutChunk(Header header, byte[] body){
+		String fileID = header.getFileId();
+		int chunkNo = Integer.parseInt(header.getChunkNumber());
+		int repDegree = Integer.parseInt(header.getChunkNumber());
+
+
+
+	}
+
+
 
 
 }

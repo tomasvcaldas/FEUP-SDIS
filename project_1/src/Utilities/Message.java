@@ -2,15 +2,17 @@ package Utilities;
 
 import java.net.DatagramPacket;
 
+import Utilities.Header;
 
 public class Message{
 
   private String body;
   private Header header;
 
+
   public Message(String body, String[] header_string){
     this.body = body;
-    this.header = new Header(header_string[1], header_string[2], header_string[3], header_string[4], header_string[5]);
+    this.header = new Header(header_string[1], header_string[2], header_string[3], header_string[4], header_string[5],header_string[6]);
   }
 
   public static Message getMessage(DatagramPacket packet){
@@ -39,4 +41,6 @@ public class Message{
     byte[] b = "olaolaolaola".getBytes();
     //System.out.println(splitMessage(b));
 	}
+
+
 }
