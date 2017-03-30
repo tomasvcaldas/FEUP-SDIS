@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 
 
-public class Channel {
+public class Channel{
 	Thread thread;
 	protected MulticastSocket multicastsocket;
 	protected InetAddress address;
