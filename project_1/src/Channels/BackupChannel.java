@@ -35,6 +35,10 @@ public class BackupChannel extends Channel {
 							PutchunkReceived(headerArgs,body);
 						}
 					//}
+					else{
+							System.out.println("The same chunk that sent the chunk is receiving it ...");
+							return;
+						}
 					multicastsocket.leaveGroup(address);
 				} catch(Exception e){
 					e.printStackTrace();

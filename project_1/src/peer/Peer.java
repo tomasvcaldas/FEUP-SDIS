@@ -51,12 +51,15 @@ public class Peer implements PeerInterface{
         System.out.println(type);
         switch(type){
             case "backup":
+                backup(args);
                 System.out.println("Backup required");
                 break;
             case "restore":
+                //restore();
                 System.out.println("Restore required");
                 break;
             case "delete":
+                //delete();
                 System.out.println("Delete required");
                 break;
         }
@@ -70,8 +73,9 @@ public class Peer implements PeerInterface{
         //TODO restore function
     }
 
-    public void backup(){
-        //TODO backup function
+    public void backup(String[] args){
+      // chamar a split file
+      //dividir em chunks
     }
 
     public void delete(){

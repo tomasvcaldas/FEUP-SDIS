@@ -22,10 +22,14 @@ public class SplitFile {
 			int tmp = 0;
 			while((tmp = bis.read(buffer)) > 0){
 				File newF = new File(f.getParent(), name + String.format("%03d", chunkCounter++));
-				
+
+				// enviar o conteudo do ficheiro com o buffer ( cada 1 tem - body )
+				// e o header msgtype,version ( 1.0 ),id do peer passado na consola, fileid (fazer a hash), o chunkno (chunkcounter), repdegree
+				// criar o datagrampacket com a string com o header os crlfs o body e enviar para o backup ou para o controlo, ainda temos de ver
 				try(FileOutputStream out = new FileOutputStream(newF)){
+
 					out.write(buffer, 0, tmp);
-				}
+				} //esta parte é para cagar porque nao interessa ter as cenas locais
 			}
 		}
 	}
