@@ -2,7 +2,6 @@ package peer;
 
 import Channels.BackupChannel;
 
-import java.io.IOException;
 import java.net.DatagramSocket;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -12,7 +11,9 @@ public class Peer implements PeerInterface{
 
     private static String serverID;
 
-    private BackupChannel mdb;
+    private static BackupChannel mdb;
+    //private ControlChannel mc;
+    //private RestoreChannel mdr;
 
     private DatagramSocket socket;
 
@@ -20,26 +21,49 @@ public class Peer implements PeerInterface{
 
     private static Peer peer;
 
-    public Peer(String[] args) throws IOException{
+    public Peer(String[] args){
         this.serverID = args[0];
-        this.mdb = new BackupChannel(args[1], args[2]);
+        //this.mdb = new BackupChannel(args[1], args[2]);
+
+        peer = this;
     }
 
     public static void main(String[] args){
         try {
             Peer peer = new Peer(args);
-            PeerInterface stub = (PeerInterface) UnicastRemoteObject.exportObject(peer, 0);
+            //mdb.startThread();
+            System.out.println("started");
+            PeerInterface stub = (PeerInterface) UnicastRemoteObject.exportObject(peer, 1099);
 
-            // Bind the remote object's stub in the registry
+            LocateRegistry.createRegistry(1099);
+
+            //Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            //registry.bind("Hello", stub);
-
-            //dataThread = new Thread(mdb);
-            
+            registry.bind("process", stub);
+            //peer.processInfo();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void processInfo(String type, String[] args){
+        System.out.println(type);
+        switch(type){
+            case "backup":
+                System.out.println("Backup required");
+                break;
+            case "restore":
+                System.out.println("Restore required");
+                break;
+            case "delete":
+                System.out.println("Delete required");
+                break;
+        }
+    }
+
+    public void process(String type, String[] args){
+        peer.processInfo(type, args);
     }
 
     public void restore(){
