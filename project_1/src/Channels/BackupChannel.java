@@ -1,6 +1,7 @@
 package Channels;
 
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
@@ -28,9 +29,10 @@ public class BackupChannel extends Channel {
 					String msgBody = message.getBody();
 					byte[] body = msgBody.getBytes();
 
-					/*if(headerArgs.getSenderId() == /*server id){*/
+					/*if(headerArgs.getSenderId() != /*server id){*/
 						if(headerArgs.getType() == MessageType.PUTCHUNK){
-							handlePutChunk(headerArgs,body);
+							System.out.println("PUTCHUNK received, starting the handle...");
+							PutchunkReceived(headerArgs,body);
 						}
 					//}
 					multicastsocket.leaveGroup(address);
@@ -44,15 +46,25 @@ public class BackupChannel extends Channel {
 		
 	}
 
-	private void handlePutChunk(Header header, byte[] body){
+	private void PutchunkReceived(Header header, byte[] body) throws IOException{
 		String fileID = header.getFileId();
 		int chunkNo = Integer.parseInt(header.getChunkNumber());
 		int repDegree = Integer.parseInt(header.getChunkNumber());
+		String fileName = createMessage(fileID,chunkNo);
 
+
+		FileOutputStream newFile = new FileOutputStream(fileName);
+		newFile.write(body);
+		newFile.close();
 
 
 	}
 
+	private String createMessage(String id, int no){
+		String finalMsg = id + no;
+		System.out.println(finalMsg);
+		return finalMsg;
+	}
 
 
 
