@@ -16,7 +16,7 @@ public class testApp {
             System.out.println("testApp started");
             Registry registry = LocateRegistry.getRegistry();
             PeerInterface stub = (PeerInterface) registry.lookup("process");
-            stub.process(args[0], args);
+            stub.processInfo(args[0], args);
             System.out.println("response: received " + args[0]);
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());

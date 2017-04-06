@@ -23,7 +23,7 @@ public class SplitFile {
 			while((tmp = bis.read(buffer)) > 0){
 				chunkCounter++;
 				//fazer o has
-				createPutHeader(fileName,repDeg,chunkCounter, serverID,fileID )
+				//createPutHeader(fileName,repDeg,chunkCounter, serverID,fileID )
 
 				// enviar o conteudo do ficheiro com o buffer ( cada 1 tem - body )
 				// e o header msgtype,version ( 1.0 ),id do peer passado na consola, fileid (fazer a hash), o chunkno (chunkcounter), repdegree

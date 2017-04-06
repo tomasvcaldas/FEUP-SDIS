@@ -2,6 +2,7 @@ package peer;
 
 import Channels.BackupChannel;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.rmi.registry.LocateRegistry;
@@ -25,17 +26,22 @@ public class Peer implements PeerInterface{
 
     private static Peer peer;
 
-    public Peer(String[] args){
+    public Peer(String[] args) throws IOException{
         this.serverID = args[0];
-        //this.mdb = new BackupChannel(args[1], args[2]);
+
+        this.mdb = new BackupChannel(args[1], args[2]);
+
+        //creating directory with Peer id
+        new File("Peer_" + this.serverID).mkdir();
 
         peer = this;
+        this.mdb.startThread();
     }
 
     public static void main(String[] args){
         try {
             Peer peer = new Peer(args);
-            //mdb.startThread();
+
             System.out.println("started");
             PeerInterface stub = (PeerInterface) UnicastRemoteObject.exportObject(peer, 1099);
 
@@ -43,19 +49,18 @@ public class Peer implements PeerInterface{
 
             //Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("process", stub);
-            //peer.processInfo();
+            registry.bind("processInfo", stub);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void processInfo(String type, String[] args) throws IOException{
+    public void processInfo(String type, String[] TestAppArgs) throws IOException{
         System.out.println(type);
         switch(type){
             case "backup":
-                backup(args);
+                backup(TestAppArgs);
                 System.out.println("Backup required");
                 break;
             case "restore":
@@ -67,10 +72,6 @@ public class Peer implements PeerInterface{
                 System.out.println("Delete required");
                 break;
         }
-    }
-
-    public void process(String type, String[] TestAppArgs) throws IOException{
-        peer.processInfo(type, TestAppArgs);
     }
 
     public void restore(){
