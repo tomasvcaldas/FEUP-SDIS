@@ -82,7 +82,7 @@ public class Peer implements PeerInterface{
 
       String fileName = args[4];
       int repDeg = Integer.parseInt(args[5]);
-      splitFile(fileName,repDeg,Peer.serverID);
+      splitFile(fileName,repDeg,Peer.serverID,this.mdb);
 
     }
 
