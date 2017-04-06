@@ -51,6 +51,7 @@ public class Channel{
 		return address;
 	}
 
-
-
+	public int getPort() {
+		return port;
+	}
 }

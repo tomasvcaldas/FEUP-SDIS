@@ -15,7 +15,7 @@ public class SplitFile {
 		File f = new File(fileName);
 		int chunkCounter = 0;
 		int serverID = Integer.parseInt(serverId);
-		int chunkSize = 512000;
+		int chunkSize = 64000;
 		
 		byte[] buffer = new byte[chunkSize];
 
@@ -27,6 +27,7 @@ public class SplitFile {
 
 				String hashedFile = sha256(fileName);
 				String header = createPutHeader(serverID,hashedFile,chunkCounter, repDeg);
+				System.out.println("funciona por favor: " + header);
 				byte[] BHeader = header.getBytes();
 
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
@@ -35,7 +36,7 @@ public class SplitFile {
 
 				byte c[] = outputStream.toByteArray( );
 
-				DatagramPacket packet = new DatagramPacket(c, c.length);
+				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
 				mdb.getSocket().send(packet);
 
 			}
