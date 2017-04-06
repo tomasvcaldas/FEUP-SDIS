@@ -29,7 +29,7 @@ public class Peer implements PeerInterface{
     public Peer(String[] args) throws IOException{
         this.serverID = args[0];
 
-        this.mdb = new BackupChannel(args[1], args[2]);
+        this.mdb = new BackupChannel(args[1], args[2], this);
 
         //creating directory with Peer id
         new File("Peer_" + this.serverID).mkdir();
@@ -82,7 +82,9 @@ public class Peer implements PeerInterface{
 
       String fileName = args[2];
       int repDeg = Integer.parseInt(args[3]);
+      System.out.println("Splitting file");
       splitFile(fileName,repDeg,Peer.serverID,this.mdb);
+      System.out.println("File splitted");
 
     }
 

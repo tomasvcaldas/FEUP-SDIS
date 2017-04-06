@@ -9,12 +9,16 @@ import Utilities.Header;
 import Utilities.Message;
 
 import fileManage.MessageType;
+import peer.Peer;
 
 public class BackupChannel extends Channel {
 
-	public BackupChannel(String backupAddress, String backupPort ) throws IOException{
+	private Peer peer;
+
+	public BackupChannel(String backupAddress, String backupPort, Peer peer ) throws IOException{
 		super(backupAddress,backupPort);
 		this.thread = new BackupThread();
+		this.peer = peer;
 	}
 
 	public class BackupThread extends Thread {
@@ -23,25 +27,26 @@ public class BackupChannel extends Channel {
 			while(true){
 				try{
 					multicastsocket.joinGroup(address);
+					System.out.println("Joined group successfully");
 					DatagramPacket newPacket = getMulticastData();
 					Message message = Message.getMessage(newPacket);
 					Header headerArgs = message.getHeader();
 					String msgBody = message.getBody();
 					byte[] body = msgBody.getBytes();
 
-					/*if(headerArgs.getSenderId() != /*server id){*/
+					if(headerArgs.getSenderId() != peer.serverID){
 						if(headerArgs.getType() == MessageType.PUTCHUNK){
 							System.out.println("PUTCHUNK received, starting the handle...");
 							PutchunkReceived(headerArgs,body);
 						}
-					//}
+					}
 					else{
-							System.out.println("The same chunk that sent the chunk is receiving it ...");
+							System.out.println("The same peer that sent the chunk is receiving it ...");
 							return;
 						}
 					multicastsocket.leaveGroup(address);
 				} catch(Exception e){
-					e.printStackTrace();
+					//e.printStackTrace();
 			}
 
 			}

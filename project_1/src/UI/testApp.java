@@ -17,7 +17,7 @@ public class testApp {
             Registry registry = LocateRegistry.getRegistry();
             PeerInterface stub = (PeerInterface) registry.lookup("processInfo");
             stub.processInfo(args[1], args);
-            System.out.println("response: received " + args[1]);
+            System.out.println("process info");
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();

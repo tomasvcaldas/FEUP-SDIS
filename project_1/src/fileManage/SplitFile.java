@@ -35,7 +35,6 @@ public class SplitFile {
 				outputStream.write( buffer );
 
 				byte c[] = outputStream.toByteArray( );
-
 				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
 				mdb.getSocket().send(packet);
 
