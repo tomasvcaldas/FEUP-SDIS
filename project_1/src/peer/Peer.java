@@ -59,15 +59,15 @@ public class Peer implements PeerInterface{
     public void processInfo(String type, String[] TestAppArgs) throws IOException{
         System.out.println(type);
         switch(type){
-            case "backup":
+            case "BACKUP":
                 backup(TestAppArgs);
                 System.out.println("Backup required");
                 break;
-            case "restore":
+            case "RESTORE":
                 //restore();
                 System.out.println("Restore required");
                 break;
-            case "delete":
+            case "DELETE":
                 //delete();
                 System.out.println("Delete required");
                 break;
@@ -80,8 +80,8 @@ public class Peer implements PeerInterface{
 
     public void backup(String[] args) throws IOException{
 
-      String fileName = args[4];
-      int repDeg = Integer.parseInt(args[5]);
+      String fileName = args[2];
+      int repDeg = Integer.parseInt(args[3]);
       splitFile(fileName,repDeg,Peer.serverID,this.mdb);
 
     }
