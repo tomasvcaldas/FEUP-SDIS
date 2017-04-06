@@ -39,13 +39,16 @@ public class Message{
 
   public static void main(String[] args){
     byte[] b = "olaolaolaola".getBytes();
-    //System.out.println(splitMessage(b));
+
 	}
 
-  public static String createPutHeader(){
+  public static String createPutHeader(int senderId, String fileId, int chunkNo, int repDeg){
     String header;
+    String sender = Integer.toString(senderId);
+    String chunkNumber = Integer.toString(chunkNo);
+    String replicationDeg = Integer.toString(repDeg);
 
-
+    header = "PUTCHUNK "+ "1.0 " + sender + " " + fileId + " " + chunkNumber + " " + replicationDeg + " " + Header.CRLF+Header.CRLF;
     return header;
   }
 

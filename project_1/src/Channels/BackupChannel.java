@@ -65,7 +65,8 @@ public class BackupChannel extends Channel {
 	}
 
 	private String createMessage(String id, int no){
-		String finalMsg = id + no;
+		String number = Integer.toString(no);
+		String finalMsg = id + number;
 		System.out.println(finalMsg);
 		return finalMsg;
 	}
