@@ -2,14 +2,18 @@ package peer;
 
 import Channels.BackupChannel;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import static fileManage.SplitFile.splitFile;
+
+
 public class Peer implements PeerInterface{
 
-    private static String serverID;
+    public static String serverID;
 
     private static BackupChannel mdb;
     //private ControlChannel mc;
@@ -47,7 +51,7 @@ public class Peer implements PeerInterface{
         }
     }
 
-    private void processInfo(String type, String[] args){
+    private void processInfo(String type, String[] args) throws IOException{
         System.out.println(type);
         switch(type){
             case "backup":
@@ -65,17 +69,20 @@ public class Peer implements PeerInterface{
         }
     }
 
-    public void process(String type, String[] args){
-        peer.processInfo(type, args);
+    public void process(String type, String[] TestAppArgs) throws IOException{
+        peer.processInfo(type, TestAppArgs);
     }
 
     public void restore(){
         //TODO restore function
     }
 
-    public void backup(String[] args){
-      // chamar a split file
-      //dividir em chunks
+    public void backup(String[] args) throws IOException{
+
+      String fileName = args[4];
+      int repDeg = Integer.parseInt(args[5]);
+      splitFile(fileName,repDeg,Peer.serverID);
+
     }
 
     public void delete(){

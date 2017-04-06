@@ -42,6 +42,15 @@ public class Message{
     //System.out.println(splitMessage(b));
 	}
 
+  public static String createPutHeader(){
+    String header;
+
+
+    return header;
+  }
+
+
+
 
 
 
