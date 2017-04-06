@@ -19,17 +19,11 @@ public class SplitFile {
 		
 		byte[] buffer = new byte[chunkSize];
 
-		System.out.println("Before try");
-		
 		try(BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f))){
-
-			System.out.println("Inside try");
 
 			int tmp = 0;
 			while((tmp = bis.read(buffer)) > 0){
 				chunkCounter++;
-
-				System.out.println("Inside cycle");
 
 				String hashedFile = sha256(fileName);
 				String header = createPutHeader(serverID,hashedFile,chunkCounter, repDeg);
