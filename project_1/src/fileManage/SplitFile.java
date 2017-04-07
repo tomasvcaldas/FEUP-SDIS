@@ -11,7 +11,7 @@ import static Utilities.Message.createPutHeader;
 
 public class SplitFile {
 	
-	public static void splitFile(String fileName, int repDeg, String serverId, BackupChannel mdb) throws IOException{
+	public static void splitFile(String fileName, int repDeg, String serverId, BackupChannel mdb, String peer_id) throws IOException{
 		File f = new File(fileName);
 		int chunkCounter = 0;
 		int serverID = Integer.parseInt(serverId);
