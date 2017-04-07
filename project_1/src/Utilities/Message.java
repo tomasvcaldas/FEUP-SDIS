@@ -13,7 +13,8 @@ public class Message{
   public Message(String body, String[] header_string){
     this.body = body;
     System.out.println("added body to message");
-    this.header = new Header(header_string[1], header_string[2], header_string[3], header_string[4], header_string[5],header_string[6]);
+    System.out.println("header_string 1st = " + header_string[1]);
+    this.header = new Header(header_string[0], header_string[1], header_string[2], header_string[3], header_string[4],header_string[5]);
     System.out.println("added header to message");
   }
 
@@ -31,7 +32,7 @@ public class Message{
 
     //System.out.println(body);
 
-    String[] header_string = split_array[0].split("\\r");
+    String[] header_string = split_array[0].split(" ");
 
    return new Message(body, header_string);
 

@@ -36,7 +36,9 @@ public class BackupChannel extends Channel {
 					String msgBody = message.getBody();
 					byte[] body = msgBody.getBytes();
 
-					if(headerArgs.getSenderId() != peer.serverID){
+					System.out.println("message_Sender_id = " + headerArgs.getSenderId() + "; peer_id = " + peer.serverID);
+
+					if(!headerArgs.getSenderId().equals(peer.serverID)){
 						if(headerArgs.getType() == MessageType.PUTCHUNK){
 							System.out.println("PUTCHUNK received, starting the handle...");
 							PutchunkReceived(headerArgs,body);
