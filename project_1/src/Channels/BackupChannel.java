@@ -1,6 +1,7 @@
 package Channels;
 
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -65,10 +66,12 @@ public class BackupChannel extends Channel {
 		String fileID = header.getFileId();
 		int chunkNo = Integer.parseInt(header.getChunkNumber());
 		int repDegree = Integer.parseInt(header.getChunkNumber());
-		String fileName = createMessage(fileID,chunkNo);
+		//String fileName = createMessage(fileID,chunkNo);
+
+		new File("Peer_" + this.peer.serverID + "/" + fileID).mkdir();
 
 
-		FileOutputStream newFile = new FileOutputStream(fileName);
+		FileOutputStream newFile = new FileOutputStream("Peer_" + this.peer.serverID + "/" + fileID + "/" + chunkNo);
 		newFile.write(body);
 		newFile.close();
 
