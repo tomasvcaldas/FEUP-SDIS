@@ -29,7 +29,9 @@ public class BackupChannel extends Channel {
 					multicastsocket.joinGroup(address);
 					System.out.println("Joined group successfully");
 					DatagramPacket newPacket = getMulticastData();
+					System.out.println("Before getMessage");
 					Message message = Message.getMessage(newPacket);
+					System.out.println("After getMessage");
 					Header headerArgs = message.getHeader();
 					String msgBody = message.getBody();
 					byte[] body = msgBody.getBytes();

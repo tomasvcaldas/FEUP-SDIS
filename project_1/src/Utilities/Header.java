@@ -5,14 +5,15 @@ import fileManage.MessageType;
 public class Header {
 	public static final String CRLF = "\r\n";   // CR:0xd + LF:0xa
 
-	public MessageType msgType;
-	public String version;
-	public String sender_id;
-	public String file_id;
-	public String chunkNumber;
-	public String replicationDegree;
+	private MessageType msgType;
+	private String version;
+	private String sender_id;
+	private String file_id;
+	private String chunkNumber;
+	private String replicationDegree;
 
 	public Header(String type,String version, String sender_id, String file_id,String chunkNumber, String replicationDegree){
+		System.out.println("entered header cosntructor");
 		this.msgType = MessageType.valueOf(type);
 		this.version = version;
 		this.sender_id = sender_id;
