@@ -1,6 +1,7 @@
 package peer;
 
 import Channels.BackupChannel;
+import Channels.ControlChannel;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +10,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import static Protocols.Delete.Delete;
 import static fileManage.SplitFile.splitFile;
+
+
 
 
 public class Peer implements PeerInterface{
@@ -17,7 +21,7 @@ public class Peer implements PeerInterface{
     public static String serverID;
 
     private static BackupChannel mdb;
-    //private ControlChannel mc;
+    private static ControlChannel mc;
     //private RestoreChannel mdr;
 
     private DatagramSocket socket;
@@ -30,12 +34,13 @@ public class Peer implements PeerInterface{
         this.serverID = args[0];
 
         this.mdb = new BackupChannel(args[1], args[2], this);
-
+        this.mc = new ControlChannel(args[1],args[2],this);
         //creating directory with Peer id
         new File("Peer_" + this.serverID).mkdir();
 
         peer = this;
         this.mdb.startThread();
+        this.mc.startThread();
     }
 
     public static void main(String[] args){
@@ -64,7 +69,7 @@ public class Peer implements PeerInterface{
                 System.out.println("Backup required");
                 break;
             case "RESTORE":
-                //restore();
+                delete(TestAppArgs);
                 System.out.println("Restore required");
                 break;
             case "DELETE":
@@ -86,6 +91,12 @@ public class Peer implements PeerInterface{
       splitFile(fileName,repDeg,Peer.serverID,this.mdb);
       System.out.println("File splitted");
 
+    }
+
+    public void delete(String[] args) throws IOException{
+        String fileName = args[2];
+        Delete(fileName, Peer.serverID, this.mc);
+        System.out.println("final delete function");
     }
 
     public void delete(){

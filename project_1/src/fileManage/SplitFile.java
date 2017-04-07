@@ -36,6 +36,7 @@ public class SplitFile {
 
 				byte c[] = outputStream.toByteArray( );
 				System.out.println("split file message size = " + c.length);
+
 				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
 				mdb.getSocket().send(packet);
 

@@ -29,17 +29,19 @@ public class BackupChannel extends Channel {
 					multicastsocket.joinGroup(address);
 					System.out.println("Joined group successfully");
 					DatagramPacket newPacket = getMulticastData();
-					System.out.println("Before getMessage");
+
 					Message message = Message.getMessage(newPacket);
-					System.out.println("After getMessage");
+
 					Header headerArgs = message.getHeader();
 					String msgBody = message.getBody();
 					byte[] body = msgBody.getBytes();
 
 					System.out.println("message_Sender_id = " + headerArgs.getSenderId() + "; peer_id = " + peer.serverID);
 
+
 					if(!headerArgs.getSenderId().equals(peer.serverID)){
 						if(headerArgs.getType() == MessageType.PUTCHUNK){
+
 							System.out.println("PUTCHUNK received, starting the handle...");
 							PutchunkReceived(headerArgs,body);
 						}
