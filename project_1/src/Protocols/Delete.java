@@ -19,18 +19,17 @@ public class Delete {
 
 
     public static void Delete(String fileName, String serverId, ControlChannel mc) throws IOException {
-        System.out.println("1");
+
         String message = createDeleteHeader(fileName, serverId);
         byte file[] = message.getBytes();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.out.println("2");
         outputStream.write(file);
         byte c[] = outputStream.toByteArray();
-        System.out.println("3");
+
         DatagramPacket packet = new DatagramPacket(c, c.length, mc.getAdress(), mc.getPort());
-        System.out.println(new String(c));
+
         mc.getSocket().send(packet);
-        System.out.println("5");
+
 
     }
 
@@ -38,7 +37,6 @@ public class Delete {
         final String filePath = System.getProperty("user.dir");
         System.out.println("current dir = " + filePath);
 
-        new File("merda").mkdir();
 
         String fileId = sha256(fileName);
         File file = new File(filePath);
@@ -47,12 +45,22 @@ public class Delete {
         for (int i = 0; i < dirListing.length; i++) {
             if (dirListing[i].isDirectory() && dirListing[i].getName().contains("Peer")) {
                 File[] filesListing = dirListing[i].listFiles();
-                for (int j = 0; j < filesListing.length; j++) {
-                    if (filesListing[j].isDirectory() && filesListing[j].getName().equals(fileId)) {
-                        filesListing[j].delete();
-                        System.out.println("All chunks and folder delete!");
 
+                for (int j = 0; j < filesListing.length; j++) {
+                    System.out.println(filesListing[j].getName());
+                    System.out.println(fileId);
+                    if(filesListing[j].getName().contains(fileId)){
+                        File[] chunksList = filesListing[j].listFiles();
+                        for(int k = 0; k < chunksList.length; k++){
+                            chunksList[k].delete();
+                            System.out.println("chunk deleted");
+                        }
+                        if(chunksList.length== 0){
+                            System.out.println("folder empty, deleting");
+                            filesListing[j].delete();
+                        }
                     }
+
                 }
 
             }
