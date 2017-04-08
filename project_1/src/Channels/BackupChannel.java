@@ -27,7 +27,6 @@ public class BackupChannel extends Channel {
 			System.out.println("Inside backup channel...");
 			while(true){
 				try{
-					multicastsocket.joinGroup(address);
 					System.out.println("Joined group successfully");
 					DatagramPacket newPacket = getMulticastData();
 
@@ -51,9 +50,9 @@ public class BackupChannel extends Channel {
 							System.out.println("The same peer that sent the chunk is receiving it ...");
 							return;
 						}
-					multicastsocket.leaveGroup(address);
+					//multicastsocket.leaveGroup(address);
 				} catch(Exception e){
-					//e.printStackTrace();
+					e.printStackTrace();
 			}
 
 			}

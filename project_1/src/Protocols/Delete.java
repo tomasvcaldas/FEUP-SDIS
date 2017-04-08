@@ -38,6 +38,8 @@ public class Delete {
         final String filePath = System.getProperty("user.dir");
         System.out.println("current dir = " + filePath);
 
+        new File("merda").mkdir();
+
         String fileId = sha256(fileName);
         File file = new File(filePath);
         File[] dirListing = file.listFiles();

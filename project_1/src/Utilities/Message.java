@@ -27,9 +27,7 @@ public class Message{
 
     String[] split_array = data_final.split(final_line);
     int index_body = split_array[0].length() + 4;
-    System.out.println("before body");
     String body = new String(packet.getData(), index_body, 256);
-    System.out.println("after body");
 
     //System.out.println(body);
 

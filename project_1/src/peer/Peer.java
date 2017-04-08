@@ -63,6 +63,7 @@ public class Peer implements PeerInterface{
     }
 
     public void processInfo(String type, String[] TestAppArgs) throws IOException{
+        System.out.println("inside processInfo");
         System.out.println(type);
         switch(type){
             case "BACKUP":

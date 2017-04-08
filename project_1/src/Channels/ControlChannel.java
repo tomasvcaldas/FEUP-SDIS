@@ -24,13 +24,17 @@ public class ControlChannel extends Channel {
 
     public class ControlThread extends Thread{
         public void run(){
-            System.out.println("inside control channel ! ");
+            System.out.println("inside control channel ...");
             while(true){
 
                 try{
-                    multicastsocket.joinGroup(address);
+                    System.out.println("try....");
                     DatagramPacket receiveDatagram = getMulticastData();
+                    System.out.println("try....2");
                     Message message = Message.getMessage(receiveDatagram);
+                    System.out.println("try....3");
+
+                    System.out.println("before get header on control");
 
                     Header headerArgs = message.getHeader();
 
@@ -41,9 +45,9 @@ public class ControlChannel extends Channel {
                         System.out.println("Received DELETE ! ");
                         deleteChunks(fileId);
                     }
-
+                    //multicastsocket.leaveGroup(address);
                 } catch(Exception e){
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }
