@@ -28,8 +28,8 @@ public class RestoreChannel extends Channel {
                     Message message = Message.getMessage(newPacket);
 
                     Header headerArgs = message.getHeader();
-                    String msgBody = message.getBody();
-                    byte[] body = msgBody.getBytes();
+
+                    byte[] body = message.getBody();
 
                     if(headerArgs.getType() == MessageType.GETCHUNK){
                         System.out.println("GETCHUNK received, starting the handle...");

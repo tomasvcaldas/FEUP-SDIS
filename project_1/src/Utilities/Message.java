@@ -7,11 +7,11 @@ import fileManage.MessageType;
 
 public class Message{
 
-  private String body;
+  private byte[] body;
   private Header header;
 
 
-  public Message(String body, String[] header_string){
+  public Message(byte[] body, String[] header_string){
     this.body = body;
     if(header_string[0].equals(MessageType.DELETE.name())){
         System.out.println("Creating delete header...");
@@ -23,20 +23,28 @@ public class Message{
     }
   }
 
+    public static byte[] array(byte[] data, int index_body,int length){
+        int size = length - index_body;
+        byte[] toRet = new byte[size];
+
+        for(int i = index_body; i < length; i++) {
+            toRet[i - index_body] = data[i];
+        }
+        return toRet;
+    }
+
   public static Message getMessage(DatagramPacket packet){
-    String data_received = new String(packet.getData());
+    String data_received = new String(packet.getData(),0,packet.getLength());
+    String[] receivedArray = data_received.split("\\r\\n\\r\\n");
 
-    String data_final = data_received.trim();
-    String final_line = Header.CRLF+ Header.CRLF;
+    int index_body = receivedArray[0].length() + 4;
+    System.out.println(packet.getLength());
+    String body = data_received.substring(index_body,data_received.length());
+    byte[] bArray = array(packet.getData(), index_body, packet.getLength());
+    //System.out.println("index body: " + index_body +  " len: " + data_received.length());
+    String[] header_string = receivedArray[0].split(" ");
 
-    String[] split_array = data_final.split(final_line);
-    int index_body = split_array[0].length() + 4;
-
-    String body = new String(packet.getData(), index_body, 256);
-
-    String[] header_string = split_array[0].split(" ");
-
-   return new Message(body, header_string);
+    return new Message(bArray, header_string);
 
   }
 
@@ -44,7 +52,7 @@ public class Message{
     return this.header;
   }
 
-  public String getBody(){
+  public byte[] getBody(){
     return this.body;
   }
 
@@ -64,6 +72,8 @@ public class Message{
   public static String createDeleteHeader(String fileName, String serverID){
     return MessageType.DELETE + " 1.0 " + serverID + " " + fileName + Header.CRLF + Header.CRLF;
   }
+
+
 
 
 

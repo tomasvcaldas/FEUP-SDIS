@@ -32,9 +32,9 @@ public class BackupChannel extends Channel {
 					Message message = Message.getMessage(newPacket);
 
 					Header headerArgs = message.getHeader();
-					String msgBody = message.getBody();
-					byte[] body = msgBody.getBytes();
-					System.out.println(body.length);
+					byte[] body = message.getBody();
+
+
 
 
 					if(!headerArgs.getSenderId().equals(peer.serverID)){
