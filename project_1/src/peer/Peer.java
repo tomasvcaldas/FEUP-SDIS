@@ -36,17 +36,16 @@ public class Peer implements PeerInterface{
 
     public Peer(String[] args) throws IOException{
         this.serverID = args[0];
-        this.metadata = Metadata.load("Peer_" + this.serverID + "/data/metadata.txt");
+        new File("Peer_" + this.serverID).mkdir();
+
+        this.metadata = Metadata.load("Peer_" +  this.serverID + "/data/metadata.txt");
 
         if(this.metadata == null)
             this.metadata = new Metadata();
 
-        System.out.println("backed up file as initiator: " + this.metadata.getBackupArray().get(0).getFileName());
-
         this.mdb = new BackupChannel(args[3], args[4], this);
         this.mc = new ControlChannel(args[1],args[2],this);
         //creating directory with Peer id
-        new File("Peer_" + this.serverID).mkdir();
 
         peer = this;
         this.mdb.startThread();

@@ -49,6 +49,7 @@ public class Metadata implements Serializable{
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            return new Metadata();
         } catch (IOException e) {
             System.out.println("Error initializing stream on load");
         } catch (ClassNotFoundException e) {
