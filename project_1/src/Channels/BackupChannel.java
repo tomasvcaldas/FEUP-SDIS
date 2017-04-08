@@ -62,6 +62,11 @@ public class BackupChannel extends Channel {
 		int chunkNo = Integer.parseInt(header.getChunkNumber());
 		int repDegree = Integer.parseInt(header.getChunkNumber());
 
+		if(peer.chunkExists(fileID, chunkNo)){
+			System.out.println("This chunk already exists on the system. Rejecting...");
+			return;
+		}
+
 		this.peer.getFileData().addChunk(fileID, chunkNo);
 		this.peer.getFileData().save(this.peer.getFileData(), this.peer.serverID);
 
