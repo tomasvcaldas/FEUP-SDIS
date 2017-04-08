@@ -13,6 +13,7 @@ import java.net.DatagramSocket;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 import static Protocols.Delete.Delete;
 import static Utilities.Hash.sha256;
@@ -123,6 +124,14 @@ public class Peer implements PeerInterface{
         String fileName = args[2];
         Delete(fileName, Peer.serverID, this.mc);
         System.out.println("final delete function");
+    }
+
+    public boolean chunkExists(String file, int chunkNo){
+        ArrayList temp = this.filedata.getFiles().get(file);
+        if(temp == null)
+            return false;
+        System.out.println(temp);
+        return temp.contains(chunkNo);
     }
 
     public FileData getFileData(){
