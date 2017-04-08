@@ -3,6 +3,7 @@ package Utilities;
 import java.net.DatagramPacket;
 
 import Utilities.Header;
+import fileManage.MessageType;
 
 public class Message{
 
@@ -59,6 +60,10 @@ public class Message{
 
     header = "PUTCHUNK "+ "1.0 " + sender + " " + fileId + " " + chunkNumber + " " + replicationDeg + " " + Header.CRLF+Header.CRLF;
     return header;
+  }
+
+  public static String createDeleteHeader(String fileName, String serverID){
+    return MessageType.DELETE + " 1.0 " + serverID + " " + fileName + Header.CRLF + Header.CRLF;
   }
 
 

@@ -2,6 +2,7 @@ package Protocols;
 
 
 import Channels.ControlChannel;
+import fileManage.MessageType;
 import peer.Peer;
 
 import javax.naming.ldap.Control;
@@ -12,18 +13,24 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 import static Utilities.Hash.sha256;
+import static Utilities.Message.createDeleteHeader;
 
 public class Delete {
 
 
     public static void Delete(String fileName, String serverId, ControlChannel mc) throws IOException {
-        byte file[] = fileName.getBytes();
+        System.out.println("1");
+        String message = createDeleteHeader(fileName, serverId);
+        byte file[] = message.getBytes();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.out.println("2");
         outputStream.write(file);
         byte c[] = outputStream.toByteArray();
+        System.out.println("3");
         DatagramPacket packet = new DatagramPacket(c, c.length, mc.getAdress(), mc.getPort());
+        System.out.println(new String(c));
         mc.getSocket().send(packet);
-
+        System.out.println("5");
 
     }
 

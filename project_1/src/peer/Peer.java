@@ -33,7 +33,7 @@ public class Peer implements PeerInterface{
     public Peer(String[] args) throws IOException{
         this.serverID = args[0];
 
-        this.mdb = new BackupChannel(args[1], args[2], this);
+        this.mdb = new BackupChannel(args[3], args[4], this);
         this.mc = new ControlChannel(args[1],args[2],this);
         //creating directory with Peer id
         new File("Peer_" + this.serverID).mkdir();
@@ -58,7 +58,7 @@ public class Peer implements PeerInterface{
             registry.bind("processInfo", stub);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -70,11 +70,11 @@ public class Peer implements PeerInterface{
                 System.out.println("Backup required");
                 break;
             case "RESTORE":
-                delete(TestAppArgs);
+                //restore():
                 System.out.println("Restore required");
                 break;
             case "DELETE":
-                //delete();
+                delete(TestAppArgs);
                 System.out.println("Delete required");
                 break;
         }
@@ -98,9 +98,5 @@ public class Peer implements PeerInterface{
         String fileName = args[2];
         Delete(fileName, Peer.serverID, this.mc);
         System.out.println("final delete function");
-    }
-
-    public void delete(){
-        //TODO restore function
     }
 }

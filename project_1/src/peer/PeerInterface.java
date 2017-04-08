@@ -7,6 +7,6 @@ import java.rmi.RemoteException;
 public interface PeerInterface extends Remote {
     void processInfo(String type, String[] TestAppArgs) throws IOException;
     void backup(String[] args) throws IOException;
-    //void delete() throws RemoteException;
+    void delete(String[] args) throws IOException;
     //void restore() throws RemoteException;
 }

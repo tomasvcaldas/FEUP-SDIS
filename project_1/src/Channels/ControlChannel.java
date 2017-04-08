@@ -28,6 +28,7 @@ public class ControlChannel extends Channel {
             while(true){
 
                 try{
+                    multicastsocket.joinGroup(address);
                     DatagramPacket receiveDatagram = getMulticastData();
                     Message message = Message.getMessage(receiveDatagram);
 
