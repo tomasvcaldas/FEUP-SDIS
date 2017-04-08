@@ -62,6 +62,9 @@ public class BackupChannel extends Channel {
 		int chunkNo = Integer.parseInt(header.getChunkNumber());
 		int repDegree = Integer.parseInt(header.getChunkNumber());
 
+		this.peer.getFileData().addChunk(fileID, chunkNo);
+		this.peer.getFileData().save(this.peer.getFileData(), this.peer.serverID);
+
 		new File("Peer_" + this.peer.serverID + "/" + fileID).mkdir();
 
 		FileOutputStream newFile = new FileOutputStream("Peer_" + this.peer.serverID + "/" + fileID + "/" + chunkNo);

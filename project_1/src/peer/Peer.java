@@ -2,8 +2,10 @@ package peer;
 
 import Channels.BackupChannel;
 import Channels.ControlChannel;
+import Data.FileData;
 import Data.FileInfo;
 import Data.Metadata;
+import com.sun.xml.internal.fastinfoset.sax.SystemIdResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class Peer implements PeerInterface{
 
     public static String serverID;
     private Metadata metadata;
+    private FileData filedata;
 
     private static BackupChannel mdb;
     private static ControlChannel mc;
@@ -38,10 +41,7 @@ public class Peer implements PeerInterface{
         this.serverID = args[0];
         new File("Peer_" + this.serverID).mkdir();
 
-        this.metadata = Metadata.load("Peer_" +  this.serverID + "/data/metadata.txt");
-
-        if(this.metadata == null)
-            this.metadata = new Metadata();
+        loadData();
 
         this.mdb = new BackupChannel(args[3], args[4], this);
         this.mc = new ControlChannel(args[1],args[2],this);
@@ -50,6 +50,19 @@ public class Peer implements PeerInterface{
         peer = this;
         this.mdb.startThread();
         this.mc.startThread();
+    }
+
+    public void loadData(){
+        this.metadata = Metadata.load("Peer_" +  this.serverID + "/data/metadata.txt");
+
+        if(this.metadata == null)
+            this.metadata = new Metadata();
+
+        this.filedata = FileData.load("Peer_" +  this.serverID + "/data/filedata.txt");
+
+        if(this.filedata == null)
+            this.filedata = new FileData();
+
     }
 
     public static void main(String[] args){
@@ -110,5 +123,9 @@ public class Peer implements PeerInterface{
         String fileName = args[2];
         Delete(fileName, Peer.serverID, this.mc);
         System.out.println("final delete function");
+    }
+
+    public FileData getFileData(){
+        return this.filedata;
     }
 }
