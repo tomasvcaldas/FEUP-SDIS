@@ -100,6 +100,15 @@ public class BackupChannel extends Channel {
 		newFile.write(body);
 		newFile.close();
 
+		String stored = Message.createStoredHeader(this.peer.serverID, fileID, chunkNo);
+
+		byte[] bStored = stored.getBytes();
+
+		DatagramPacket packet = new DatagramPacket(bStored, bStored.length, this.peer.getMc().getAdress(),this.peer.getMc().getPort());
+		this.peer.getMc().getSocket().send(packet);
+
+
+
 	}
 
 

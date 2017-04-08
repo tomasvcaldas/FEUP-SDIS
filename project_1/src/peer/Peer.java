@@ -134,6 +134,14 @@ public class Peer implements PeerInterface{
         return temp.contains(chunkNo);
     }
 
+    public  BackupChannel getMdb() {
+        return mdb;
+    }
+
+    public ControlChannel getMc() {
+        return mc;
+    }
+
     public FileData getFileData(){
         return this.filedata;
     }

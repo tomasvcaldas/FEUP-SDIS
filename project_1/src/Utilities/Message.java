@@ -25,6 +25,8 @@ public class Message{
 
     public static byte[] array(byte[] data, int index_body,int length){
         int size = length - index_body;
+        if(size <= 0)
+            return data;
         byte[] toRet = new byte[size];
 
         for(int i = index_body; i < length; i++) {
@@ -73,11 +75,7 @@ public class Message{
     return MessageType.DELETE + " 1.0 " + serverID + " " + fileName + Header.CRLF + Header.CRLF;
   }
 
-
-
-
-
-
-
-
+  public static String createStoredHeader(String senderID, String fileID, int chunkNo){
+      return MessageType.STORED + " 1.0 " + senderID + " " + fileID + " " + String.valueOf(chunkNo) + " " + Header.CRLF + Header.CRLF;
+  }
 }

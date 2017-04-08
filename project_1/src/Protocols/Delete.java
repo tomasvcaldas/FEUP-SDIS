@@ -33,7 +33,7 @@ public class Delete {
 
     }
 
-    public static void deleteChunks(String fileName) {
+    public static void deleteChunks(String fileName, String peer) {
         final String filePath = System.getProperty("user.dir");
 
         String fileId = sha256(fileName);
@@ -41,7 +41,7 @@ public class Delete {
         File[] dirListing = file.listFiles();
 
         for (int i = 0; i < dirListing.length; i++) {
-            if (dirListing[i].isDirectory() && dirListing[i].getName().contains("Peer")) {
+            if (dirListing[i].isDirectory() && dirListing[i].getName().contains("Peer_" + peer)) {
                 File[] filesListing = dirListing[i].listFiles();
 
                 for (int j = 0; j < filesListing.length; j++) {
@@ -51,10 +51,8 @@ public class Delete {
                             chunksList[k].delete();
                             System.out.println("chunk deleted");
                         }
-                        if(chunksList.length== 0){
-                            System.out.println("folder empty, deleting");
-                            filesListing[j].delete();
-                        }
+                        System.out.println("folder empty, deleting");
+                        filesListing[j].delete();
                     }
                 }
             }
