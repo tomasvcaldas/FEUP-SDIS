@@ -27,7 +27,7 @@ public class SplitFile {
 
 				String hashedFile = sha256(fileName);
 				String header = createPutHeader(serverID,hashedFile,chunkCounter, repDeg);
-				System.out.println("funciona por favor: " + header);
+
 				byte[] BHeader = header.getBytes();
 
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
@@ -35,7 +35,6 @@ public class SplitFile {
 				outputStream.write( buffer );
 
 				byte c[] = outputStream.toByteArray( );
-				System.out.println("split file message size = " + c.length);
 
 				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
 				mdb.getSocket().send(packet);
@@ -44,12 +43,5 @@ public class SplitFile {
 		}
 	}
 
-	/*public static void main(String[] args) throws IOException{
-		System.out.println("Write the full path to the file you want to split in chunks");
-		Scanner scan = new Scanner(System.in);
-		String path = scan.nextLine();
-		splitFile(new File(path));
-		System.out.println("File split successfuly!");
-	}*/
 
 }

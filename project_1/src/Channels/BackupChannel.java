@@ -24,10 +24,9 @@ public class BackupChannel extends Channel {
 
 	public class BackupThread extends Thread {
 		public void run(){
-			System.out.println("Inside backup channel...");
+			System.out.println("BACKUP: reading...");
 			while(true){
 				try{
-					System.out.println("Joined group successfully");
 					DatagramPacket newPacket = getMulticastData();
 
 					Message message = Message.getMessage(newPacket);
@@ -35,13 +34,11 @@ public class BackupChannel extends Channel {
 					Header headerArgs = message.getHeader();
 					String msgBody = message.getBody();
 					byte[] body = msgBody.getBytes();
-
-					System.out.println("message_Sender_id = " + headerArgs.getSenderId() + "; peer_id = " + peer.serverID);
+					System.out.println(body.length);
 
 
 					if(!headerArgs.getSenderId().equals(peer.serverID)){
 						if(headerArgs.getType() == MessageType.PUTCHUNK){
-
 							System.out.println("PUTCHUNK received, starting the handle...");
 							PutchunkReceived(headerArgs,body);
 						}
@@ -50,7 +47,6 @@ public class BackupChannel extends Channel {
 							System.out.println("The same peer that sent the chunk is receiving it ...");
 							return;
 						}
-					//multicastsocket.leaveGroup(address);
 				} catch(Exception e){
 					e.printStackTrace();
 			}
@@ -65,24 +61,16 @@ public class BackupChannel extends Channel {
 		String fileID = header.getFileId();
 		int chunkNo = Integer.parseInt(header.getChunkNumber());
 		int repDegree = Integer.parseInt(header.getChunkNumber());
-		//String fileName = createMessage(fileID,chunkNo);
 
 		new File("Peer_" + this.peer.serverID + "/" + fileID).mkdir();
-
 
 		FileOutputStream newFile = new FileOutputStream("Peer_" + this.peer.serverID + "/" + fileID + "/" + chunkNo);
 		newFile.write(body);
 		newFile.close();
 
-
 	}
 
-	private String createMessage(String id, int no){
-		String number = Integer.toString(no);
-		String finalMsg = id + number;
-		System.out.println(finalMsg);
-		return finalMsg;
-	}
+
 
 
 

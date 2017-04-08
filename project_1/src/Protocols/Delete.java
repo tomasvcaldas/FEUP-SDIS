@@ -35,8 +35,6 @@ public class Delete {
 
     public static void deleteChunks(String fileName) {
         final String filePath = System.getProperty("user.dir");
-        System.out.println("current dir = " + filePath);
-
 
         String fileId = sha256(fileName);
         File file = new File(filePath);
@@ -47,8 +45,6 @@ public class Delete {
                 File[] filesListing = dirListing[i].listFiles();
 
                 for (int j = 0; j < filesListing.length; j++) {
-                    System.out.println(filesListing[j].getName());
-                    System.out.println(fileId);
                     if(filesListing[j].getName().contains(fileId)){
                         File[] chunksList = filesListing[j].listFiles();
                         for(int k = 0; k < chunksList.length; k++){
@@ -60,13 +56,8 @@ public class Delete {
                             filesListing[j].delete();
                         }
                     }
-
                 }
-
             }
-
         }
-
-
     }
 }

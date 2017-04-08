@@ -38,6 +38,7 @@ public class Channel{
 			byte[] buf = new byte[64000];
 			DatagramPacket packet = new DatagramPacket(buf,buf.length);
 			multicastsocket.receive(packet);
+
 			return packet;
 	}
 

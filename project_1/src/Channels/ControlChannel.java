@@ -28,24 +28,19 @@ public class ControlChannel extends Channel {
             while(true){
 
                 try{
-                    System.out.println("try....");
-                    DatagramPacket receiveDatagram = getMulticastData();
-                    System.out.println("try....2");
-                    Message message = Message.getMessage(receiveDatagram);
-                    System.out.println("try....3");
 
-                    System.out.println("before get header on control");
+                    DatagramPacket receiveDatagram = getMulticastData();
+
+                    Message message = Message.getMessage(receiveDatagram);
 
                     Header headerArgs = message.getHeader();
 
-                    String fileId = headerArgs.getFileId();
-                    System.out.println("msg type: " + headerArgs.getType());
 
                     if(headerArgs.getType() == MessageType.DELETE){
-                        System.out.println("Received DELETE ! ");
-                        deleteChunks(fileId);
+                        System.out.println("DELETE received, starting the handle...");
+                        deleteChunks(headerArgs.getFileId());
                     }
-                    //multicastsocket.leaveGroup(address);
+
                 } catch(Exception e){
                     e.printStackTrace();
                 }
