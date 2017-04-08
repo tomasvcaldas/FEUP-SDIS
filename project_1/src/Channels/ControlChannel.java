@@ -18,7 +18,7 @@ public class ControlChannel extends Channel {
 
     public ControlChannel(String controlAddress, String controlPort, Peer peer) throws IOException{
         super(controlAddress,controlPort);
-        this.thread = new ControlThread();
+        setThread(new ControlThread());
         this.peer = peer;
     }
 

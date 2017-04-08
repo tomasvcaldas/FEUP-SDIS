@@ -14,7 +14,7 @@ public class RestoreChannel extends Channel {
 
     public RestoreChannel(String restoreAddress, String restorePort,Peer peer) throws IOException{
         super(restoreAddress,restorePort);
-        this.thread = new RestoreThread();
+        setThread(new RestoreThread());
         this.peer = peer;
     }
 

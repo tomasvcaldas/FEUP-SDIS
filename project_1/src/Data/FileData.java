@@ -21,6 +21,7 @@ public class FileData implements Serializable{
     }
 
     public static void save(FileData f, String peer){
+       /*
         try{
             new File("Peer_" + peer + "/data").mkdir();
             FileOutputStream f1 = new FileOutputStream(new File("Peer_" + peer + "/data/filedata.txt"));
@@ -34,7 +35,7 @@ public class FileData implements Serializable{
         } catch (IOException e) {
             System.out.println("Error initializing stream on save");
         }
-
+        */
     }
 
     public static FileData load(String path){

@@ -39,9 +39,9 @@ public class Message{
 
     int index_body = receivedArray[0].length() + 4;
     System.out.println(packet.getLength());
-    String body = data_received.substring(index_body,data_received.length());
+
     byte[] bArray = array(packet.getData(), index_body, packet.getLength());
-    //System.out.println("index body: " + index_body +  " len: " + data_received.length());
+      
     String[] header_string = receivedArray[0].split(" ");
 
     return new Message(bArray, header_string);

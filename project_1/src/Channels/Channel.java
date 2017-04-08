@@ -9,10 +9,10 @@ import java.util.Arrays;
 
 
 public class Channel{
-	Thread thread;
-	protected MulticastSocket multicastsocket;
-	protected InetAddress address;
-	protected int port;
+	private Thread thread;
+	private MulticastSocket multicastsocket;
+	private InetAddress address;
+	private int port;
 
 
 	Channel(String address, String port) {
@@ -26,7 +26,6 @@ public class Channel{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-
 	}
 
 
@@ -35,9 +34,10 @@ public class Channel{
 	}
 
 	public DatagramPacket getMulticastData() throws IOException{
-			byte[] buf = new byte[64000];
+			byte[] buf = new byte[65000];
 			DatagramPacket packet = new DatagramPacket(buf,buf.length);
 			multicastsocket.receive(packet);
+			System.out.println("DASDSADSADSA00");
 
 			return packet;
 	}
@@ -55,5 +55,9 @@ public class Channel{
 
 	public int getPort() {
 		return port;
+	}
+
+	public void setThread(Thread thread){
+		this.thread=thread;
 	}
 }

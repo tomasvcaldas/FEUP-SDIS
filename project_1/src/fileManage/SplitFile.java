@@ -38,6 +38,7 @@ public class SplitFile {
 
 				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
 				mdb.getSocket().send(packet);
+				System.out.println("SENDING PACKET: " + chunkCounter);
 
 			}
 		}

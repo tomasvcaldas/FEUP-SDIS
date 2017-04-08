@@ -18,44 +18,68 @@ public class BackupChannel extends Channel {
 
 	public BackupChannel(String backupAddress, String backupPort, Peer peer ) throws IOException{
 		super(backupAddress,backupPort);
-		this.thread = new BackupThread();
+		setThread(new BackupThread());
 		this.peer = peer;
 	}
 
 	public class BackupThread extends Thread {
+
+	    Thread handler=null;
+
 		public void run(){
 			System.out.println("BACKUP: reading...");
-			while(true){
-				try{
-					DatagramPacket newPacket = getMulticastData();
 
-					Message message = Message.getMessage(newPacket);
+                try {
+                    while(true) {
+                        DatagramPacket newPacket = getMulticastData();
+                        this.handler = new messageHandler(newPacket);
+                        handler.start();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-					Header headerArgs = message.getHeader();
-					byte[] body = message.getBody();
 
 
-
-
-					if(!headerArgs.getSenderId().equals(peer.serverID)){
-						if(headerArgs.getType() == MessageType.PUTCHUNK){
-							System.out.println("PUTCHUNK received, starting the handle...");
-							PutchunkReceived(headerArgs,body);
-						}
-					}
-					else{
-							System.out.println("The same peer that sent the chunk is receiving it ...");
-							return;
-						}
-				} catch(Exception e){
-					e.printStackTrace();
-			}
 
 			}
-
-		}
 		
 	}
+
+	public class messageHandler extends Thread{
+
+	    DatagramPacket request=null;
+
+	    public messageHandler(DatagramPacket request){
+	        this.request=request;
+        }
+
+        public void run(){
+            try{
+                Message message = Message.getMessage(request);
+
+                Header headerArgs = message.getHeader();
+                byte[] body = message.getBody();
+
+
+
+
+                if(!headerArgs.getSenderId().equals(peer.serverID)){
+                    if(headerArgs.getType() == MessageType.PUTCHUNK){
+                        System.out.println("PUTCHUNK received, starting the handle...");
+                        PutchunkReceived(headerArgs,body);
+                    }
+                }
+                else{
+                    System.out.println("The same peer that sent the chunk is receiving it ...");
+                    return;
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 	private void PutchunkReceived(Header header, byte[] body) throws IOException{
 		String fileID = header.getFileId();
