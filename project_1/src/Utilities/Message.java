@@ -25,6 +25,8 @@ public class Message{
 
     public static byte[] array(byte[] data, int index_body,int length){
         int size = length - index_body;
+        if(size <= 0)
+            return data;
         byte[] toRet = new byte[size];
 
         for(int i = index_body; i < length; i++) {
@@ -39,7 +41,7 @@ public class Message{
 
     int index_body = receivedArray[0].length() + 4;
     System.out.println(packet.getLength());
-    String body = data_received.substring(index_body,data_received.length());
+    //String body = data_received.substring(index_body,data_received.length());
     byte[] bArray = array(packet.getData(), index_body, packet.getLength());
     //System.out.println("index body: " + index_body +  " len: " + data_received.length());
     String[] header_string = receivedArray[0].split(" ");
@@ -73,11 +75,7 @@ public class Message{
     return MessageType.DELETE + " 1.0 " + serverID + " " + fileName + Header.CRLF + Header.CRLF;
   }
 
-
-
-
-
-
-
-
+  public static String createStoredHeader(String senderID, String fileID, int chunkNo){
+      return MessageType.STORED + " 1.0 " + senderID + " " + fileID + " " + String.valueOf(chunkNo) + " " + Header.CRLF + Header.CRLF;
+  }
 }

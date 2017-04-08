@@ -38,7 +38,7 @@ public class ControlChannel extends Channel {
 
                     if(headerArgs.getType() == MessageType.DELETE){
                         System.out.println("DELETE received, starting the handle...");
-                        deleteChunks(headerArgs.getFileId());
+                        deleteChunks(headerArgs.getFileId(), peer.serverID);
                     }
 
                 } catch(Exception e){
