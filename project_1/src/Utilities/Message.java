@@ -14,8 +14,17 @@ public class Message{
   public Message(String body, String[] header_string){
     this.body = body;
     System.out.println("added body to message");
-    System.out.println("header_string 1st = " + header_string[1]);
-    this.header = new Header(header_string[0], header_string[1], header_string[2], header_string[3], header_string[4],header_string[5]);
+    System.out.println("header_string 1st = " + header_string[0]);
+    System.out.println("string: " + MessageType.DELETE.name());
+
+    if(header_string[0].equals(MessageType.DELETE.name())){
+        System.out.println("Creating delete header...");
+        this.header = new Header(header_string[0], header_string[1],header_string[2],header_string[3]);
+    }
+    if(header_string[0].equals(MessageType.PUTCHUNK.name())){
+        System.out.println("Creating putchunk header...");
+        this.header = new Header(header_string[0], header_string[1], header_string[2], header_string[3], header_string[4],header_string[5]);
+    }
     System.out.println("added header to message");
   }
 

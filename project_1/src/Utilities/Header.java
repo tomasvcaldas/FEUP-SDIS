@@ -13,13 +13,19 @@ public class Header {
 	private String replicationDegree;
 
 	public Header(String type,String version, String sender_id, String file_id,String chunkNumber, String replicationDegree){
-		System.out.println("entered header cosntructor");
 		this.msgType = MessageType.valueOf(type);
 		this.version = version;
 		this.sender_id = sender_id;
 		this.file_id = file_id;
 		this.chunkNumber = chunkNumber;
 		this.replicationDegree = replicationDegree;
+	}
+
+	public Header(String type, String version, String sender_id, String file_id){
+		this.msgType = MessageType.valueOf(type);
+		this.version = version;
+		this.sender_id = sender_id;
+		this.file_id = file_id;
 	}
 
 

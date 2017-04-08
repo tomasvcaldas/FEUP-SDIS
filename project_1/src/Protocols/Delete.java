@@ -49,9 +49,11 @@ public class Delete {
                 File[] filesListing = dirListing[i].listFiles();
                 for (int j = 0; j < filesListing.length; j++) {
                     if (filesListing[j].isDirectory() && filesListing[j].getName().equals(fileId)) {
+                        filesListing[j].delete();
                         File[] chunksListing = filesListing[j].listFiles();
                         for(int k = 0; k < chunksListing.length; k++){
                             chunksListing[k].delete();
+                            System.out.println("Chunk deleted...");
                         }
                     }
                 }
