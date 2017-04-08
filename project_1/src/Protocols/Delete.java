@@ -28,7 +28,9 @@ public class Delete {
     }
 
     public static void deleteChunks(String fileName) {
-        String filePath = "/home/tomasvieiracaldas/FEUP-SDIS/project_1";
+        final String filePath = System.getProperty("user.dir");
+        System.out.println("current dir = " + filePath);
+
         String fileId = sha256(fileName);
         File file = new File(filePath);
         File[] dirListing = file.listFiles();
@@ -37,8 +39,11 @@ public class Delete {
             if (dirListing[i].isDirectory() && dirListing[i].getName().contains("Peer")) {
                 File[] filesListing = dirListing[i].listFiles();
                 for (int j = 0; j < filesListing.length; j++) {
-                    if (filesListing[j].isFile() && filesListing[j].getName().equals(fileId)) {
-                        filesListing[j].delete();
+                    if (filesListing[j].isDirectory() && filesListing[j].getName().equals(fileId)) {
+                        File[] chunksListing = filesListing[j].listFiles();
+                        for(int k = 0; k < chunksListing.length; k++){
+                            chunksListing[k].delete();
+                        }
                     }
                 }
 

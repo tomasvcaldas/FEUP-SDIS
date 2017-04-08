@@ -47,6 +47,7 @@ public class Peer implements PeerInterface{
         try {
             Peer peer = new Peer(args);
 
+
             System.out.println("started");
             PeerInterface stub = (PeerInterface) UnicastRemoteObject.exportObject(peer, 1099);
 
