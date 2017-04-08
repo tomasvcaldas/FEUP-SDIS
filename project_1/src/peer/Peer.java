@@ -2,6 +2,8 @@ package peer;
 
 import Channels.BackupChannel;
 import Channels.ControlChannel;
+import Data.FileInfo;
+import Data.Metadata;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import static Protocols.Delete.Delete;
+import static Utilities.Hash.sha256;
 import static fileManage.SplitFile.splitFile;
 
 
@@ -19,6 +22,7 @@ import static fileManage.SplitFile.splitFile;
 public class Peer implements PeerInterface{
 
     public static String serverID;
+    private Metadata metadata;
 
     private static BackupChannel mdb;
     private static ControlChannel mc;
@@ -32,6 +36,12 @@ public class Peer implements PeerInterface{
 
     public Peer(String[] args) throws IOException{
         this.serverID = args[0];
+        this.metadata = Metadata.load("Peer_" + this.serverID + "/data/metadata.txt");
+
+        if(this.metadata == null)
+            this.metadata = new Metadata();
+
+        System.out.println("backed up file as initiator: " + this.metadata.getBackupArray().get(0).getFileName());
 
         this.mdb = new BackupChannel(args[3], args[4], this);
         this.mc = new ControlChannel(args[1],args[2],this);
@@ -86,13 +96,15 @@ public class Peer implements PeerInterface{
     }
 
     public void backup(String[] args) throws IOException{
-
       String fileName = args[2];
+      File file1 = new File(fileName);
       int repDeg = Integer.parseInt(args[3]);
       System.out.println("Splitting file");
       splitFile(fileName,repDeg,Peer.serverID,this.mdb, this.serverID);
       System.out.println("File splitted");
-
+      FileInfo f = new FileInfo(fileName, sha256(fileName), repDeg, file1.length());
+      this.metadata.addFile(f);
+      Metadata.save(this.metadata, this.serverID);
     }
 
     public void delete(String[] args) throws IOException{
