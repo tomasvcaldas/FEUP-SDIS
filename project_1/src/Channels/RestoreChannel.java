@@ -8,6 +8,8 @@ import peer.Peer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RestoreChannel extends Channel {
     private Peer peer;

@@ -2,10 +2,12 @@ package peer;
 
 import Channels.BackupChannel;
 import Channels.ControlChannel;
+import Channels.RestoreChannel;
 import Data.FileData;
 import Data.FileInfo;
 import Data.Metadata;
 import Protocols.Delete;
+import Protocols.Restore;
 import com.sun.xml.internal.fastinfoset.sax.SystemIdResolver;
 
 import java.io.File;
@@ -31,13 +33,13 @@ public class Peer implements PeerInterface{
 
     private static BackupChannel mdb;
     private static ControlChannel mc;
-    //private RestoreChannel mdr;
+    private static RestoreChannel mdr;
 
-    private DatagramSocket socket;
+    //private DatagramSocket socket;
 
-    private Thread dataThread;
+    //private Thread dataThread;
 
-    private static Peer peer;
+    private Peer peer;
 
     public Peer(String[] args) throws IOException{
         this.serverID = args[0];
@@ -47,11 +49,14 @@ public class Peer implements PeerInterface{
 
         this.mdb = new BackupChannel(args[3], args[4], this);
         this.mc = new ControlChannel(args[1],args[2],this);
+        this.mdr = new RestoreChannel(args[5], args[6], this);
         //creating directory with Peer id
 
-        peer = this;
         this.mdb.startThread();
         this.mc.startThread();
+        this.mdr.startThread();
+
+        peer = this;
     }
 
     public void loadData(){
@@ -95,7 +100,7 @@ public class Peer implements PeerInterface{
                 System.out.println("Backup required");
                 break;
             case "RESTORE":
-                //restore():
+                restore(TestAppArgs);
                 System.out.println("Restore required");
                 break;
             case "DELETE":
@@ -105,8 +110,9 @@ public class Peer implements PeerInterface{
         }
     }
 
-    public void restore(){
-        //TODO restore function
+    public void restore(String[] args) throws IOException{
+        String fileName = args[2];
+        Restore rest = new Restore(fileName, this.peer);
     }
 
     public void backup(String[] args) throws IOException{
@@ -146,6 +152,8 @@ public class Peer implements PeerInterface{
     public void deleteChunks(String fileID){
         Delete.deleteChunks(fileID, this.serverID);
     }
+
+    public static RestoreChannel getMdr() { return mdr; }
 
     public FileData getFileData(){
         return this.filedata;
