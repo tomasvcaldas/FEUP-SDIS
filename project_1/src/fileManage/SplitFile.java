@@ -10,6 +10,8 @@ import static Utilities.Hash.sha256;
 import static Utilities.Message.createPutHeader;
 
 public class SplitFile {
+
+	//http://stackoverflow.com/questions/10864317/how-to-break-a-file-into-pieces-using-java
 	
 	public static void splitFile(String fileName, int repDeg, String serverId, BackupChannel mdb, String peer_id) throws IOException{
 		File f = new File(fileName);

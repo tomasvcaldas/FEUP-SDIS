@@ -31,6 +31,8 @@ public class Peer implements PeerInterface{
     private Metadata metadata;
     private FileData filedata;
 
+    private Restore restored;
+
     private static BackupChannel mdb;
     private static ControlChannel mc;
     private static RestoreChannel mdr;
@@ -57,6 +59,7 @@ public class Peer implements PeerInterface{
         this.mdr.startThread();
 
         peer = this;
+        this.restored = null;
     }
 
     public void loadData(){
@@ -69,6 +72,8 @@ public class Peer implements PeerInterface{
 
         if(this.filedata == null)
             this.filedata = new FileData();
+
+        System.out.println(this.filedata.getFiles().get(sha256("tomas.jpg")));
 
     }
 
@@ -110,7 +115,8 @@ public class Peer implements PeerInterface{
 
     public void restore(String[] args) throws IOException{
         String fileName = args[2];
-        Restore rest = new Restore(fileName, this.peer);
+        this.restored = new Restore(fileName, this);
+        this.restored.sendGetChunkMessage();
     }
 
     public void backup(String[] args) throws IOException{
@@ -156,5 +162,9 @@ public class Peer implements PeerInterface{
 
     public FileData getFileData(){
         return this.filedata;
+    }
+
+    public Restore getRestored() {
+        return restored;
     }
 }

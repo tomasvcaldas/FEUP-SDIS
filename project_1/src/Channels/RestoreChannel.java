@@ -1,15 +1,19 @@
 package Channels;
 
 
+import Protocols.Restore;
 import Utilities.Header;
 import Utilities.Message;
 import fileManage.MessageType;
 import peer.Peer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static fileManage.mergeFile.mergeFiles;
 
 public class RestoreChannel extends Channel {
     private Peer peer;
@@ -33,8 +37,9 @@ public class RestoreChannel extends Channel {
 
                     byte[] body = message.getBody();
 
-                    if(headerArgs.getType() == MessageType.GETCHUNK){
-                        System.out.println("GETCHUNK received, starting the handle...");
+                    if(headerArgs.getType() == MessageType.CHUNK){
+                        System.out.println("CHUNK received, starting the handle...");
+                        processMessage(headerArgs.getChunkNumber(), body);
                     }
                 } catch(Exception e){
                 e.printStackTrace();
@@ -42,5 +47,18 @@ public class RestoreChannel extends Channel {
             }
         }
 
+    }
+
+    public void processMessage(String chunk, byte[] body) throws IOException{
+        if(peer.getRestored() != null) {
+            if (body.length >= 64000) {
+                peer.getRestored().putByte(chunk, body);
+                peer.getRestored().sendGetChunkMessage();
+            } else {
+                new File("data/restores").mkdir();
+                File f = new File("data/restores/" + peer.getRestored().getFileName());
+                mergeFiles(peer.getRestored().getBytes(), f);
+            }
+        }
     }
 }

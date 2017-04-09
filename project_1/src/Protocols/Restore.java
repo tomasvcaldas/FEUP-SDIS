@@ -6,6 +6,7 @@ import peer.Peer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,16 +23,14 @@ public class Restore {
     private String hashed;
     private int nextChunk;
 
-    public static HashMap<String, ArrayList> restores;
+    private HashMap<Integer, byte[]> restores;
 
     public Restore(String fileName, Peer peer)throws IOException{
         this.peer = peer;
         this.fileName = fileName;
-        this.nextChunk = 1;
         this.hashed = sha256(fileName);
-        sendGetChunkMessage();
-        restores = new HashMap<>();
-        restores.put(this.hashed, new ArrayList());
+        this.nextChunk = 1;
+        this.restores = new HashMap<>();
     }
 
     public void sendGetChunkMessage() throws IOException{
@@ -42,22 +41,38 @@ public class Restore {
         outputStream.write(file);
         byte c[] = outputStream.toByteArray();
 
+        System.out.println("chunk nº " + this.nextChunk + " c length " + c.length);
+        System.out.println(peer);
+
         DatagramPacket packet = new DatagramPacket(c, c.length, this.peer.getMc().getAdress(), this.peer.getMc().getPort());
 
         this.peer.getMc().getSocket().send(packet);
+        this.nextChunk++;
     }
 
-    public static HashMap<String, ArrayList> getRestores() {
-        return restores;
+    public String getFileName() {
+        return fileName;
     }
 
-    public static boolean chunkExists(String fileID, String chunkNo){
-        int chunk  = Integer.parseInt(chunkNo);
-        ArrayList temp = restores.get(fileID);
-        if (temp.contains(chunk)){
+    public void putByte(String chunk, byte[] body){
+        this.restores.put(Integer.parseInt(chunk), body);
+    }
+
+    /*public boolean chunkExists(String chunkNo){
+        /*int chunk  = Integer.parseInt(chunkNo);
+        if (chunksArray.contains(chunk)){
             System.out.println("This chunk already exists... Aborting");
             return true;
         }
         return false;
+    }*/
+
+    public ArrayList<byte[]> getBytes(){
+        ArrayList<byte[]> ret = new ArrayList<>();
+        for(byte[] b: this.restores.values()){
+            ret.add(b);
+        }
+
+        return ret;
     }
 }

@@ -21,7 +21,7 @@ public class Message{
         System.out.println("Creating putchunk header...");
         this.header = new Header(header_string[0], header_string[1], header_string[2], header_string[3], header_string[4],header_string[5]);
     }
-    if(header_string[0].equals(MessageType.STORED.name())){
+    if(header_string[0].equals(MessageType.STORED.name()) || header_string[0].equals(MessageType.GETCHUNK.name()) || header_string[0].equals(MessageType.CHUNK.name())){
           System.out.println("Creating stored header...");
           this.header = new Header(header_string[0], header_string[1], header_string[2], header_string[3], header_string[4]);
     }

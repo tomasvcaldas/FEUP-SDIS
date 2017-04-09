@@ -63,4 +63,12 @@ public class FileData implements Serializable{
     public ConcurrentHashMap<String, ArrayList> getFiles() {
         return files;
     }
+
+    public boolean hasChunk(String fileID, String chunkNo){
+        if(files.containsKey(fileID)){
+            ArrayList temp = files.get(fileID);
+            return temp.contains(Integer.parseInt(chunkNo));
+        }
+        return false;
+    }
 }
