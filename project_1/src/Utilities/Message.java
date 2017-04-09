@@ -82,4 +82,12 @@ public class Message{
   public static String createStoredHeader(String senderID, String fileID, int chunkNo){
       return MessageType.STORED + " 1.0 " + senderID + " " + fileID + " " + String.valueOf(chunkNo) + " " + Header.CRLF + Header.CRLF;
   }
+
+  public static String createGetChunkHeader(String fileName, String serverID, int chunk){
+      return MessageType.GETCHUNK + " 1.0 " + serverID + " " + fileName + " " + String.valueOf(chunk) + " " + Header.CRLF + Header.CRLF;
+  }
+
+  public static String createChunkHeader(String senderID, String fileID, String chunkNo){
+      return MessageType.CHUNK + " 1.0 " + senderID + " " + fileID + " " + chunkNo + Header.CRLF + Header.CRLF;
+  }
 }
