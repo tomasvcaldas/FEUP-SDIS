@@ -14,15 +14,13 @@ public class mergeFile {
 
 	//http://stackoverflow.com/questions/10864317/how-to-break-a-file-into-pieces-using-java
 
-	public static void mergeFiles(ArrayList<byte[]> body, File into)
-			throws IOException {
+	public static void mergeFiles(ArrayList<byte[]> body, File into) throws IOException {
 		into.getParentFile().mkdirs();
 		try (BufferedOutputStream mergingStream = new BufferedOutputStream(
 				new FileOutputStream(into))) {
 			for (byte[] b : body) {
 				mergingStream.write(b);
 			}
-			mergingStream.close();
 		}
 	}
 }

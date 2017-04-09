@@ -37,6 +37,8 @@ public class Peer implements PeerInterface{
     private static ControlChannel mc;
     private static RestoreChannel mdr;
 
+    public boolean waitingForChunk = true;
+
     //private DatagramSocket socket;
 
     //private Thread dataThread;

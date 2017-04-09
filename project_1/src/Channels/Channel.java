@@ -57,6 +57,8 @@ public class Channel{
 		return port;
 	}
 
+	public Thread getThread() { return thread; }
+
 	public void setThread(Thread thread){
 		this.thread=thread;
 	}
