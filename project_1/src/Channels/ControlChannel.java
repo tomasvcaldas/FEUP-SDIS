@@ -12,20 +12,22 @@ import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 public class ControlChannel extends Channel {
-
+    ArrayList<Message> replies;
     private Peer peer;
 
     public ControlChannel(String controlAddress, String controlPort, Peer peer) throws IOException{
         super(controlAddress,controlPort);
         setThread(new ControlThread());
         this.peer = peer;
+        replies = new ArrayList<>();
     }
 
     public class ControlThread extends Thread{
         public void run(){
-            System.out.println("inside control channel ...");
+            System.out.println("CONTROL: reading...");
             while(true){
 
                 try{
@@ -36,11 +38,14 @@ public class ControlChannel extends Channel {
 
                     Header headerArgs = message.getHeader();
 
+                    System.out.println("MSG TYPE RECEIVED IN CNTRL CHANNEL: " + headerArgs.getType());
                     if(headerArgs.getType() == MessageType.DELETE){
                         System.out.println("DELETE received, starting the handle...");
                         peer.deleteChunks(headerArgs.getFileId());
                     }
                     else if(headerArgs.getType() == MessageType.STORED){
+                        System.out.println("STORED received, starting the handle...");
+                        replies.add(message);
                         //TODO codigo do stored, ver a contagem dos chunks que ja recebeu
                         //TODO por causa do replication degree e esperar o tempo necessario
                         //TODO para mandar outra vez
@@ -70,7 +75,7 @@ public class ControlChannel extends Channel {
 
         byte c[] = outputStream.toByteArray( );
 
-        if(!Restore.chunkExists(chunkNo)){
+        if(!Restore.chunkExists(fileID,chunkNo)){
             DatagramPacket packet = new DatagramPacket(c, c.length,peer.getMdr().getAdress(),peer.getMdr().getPort());
             peer.getMdr().getSocket().send(packet);
         }

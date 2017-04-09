@@ -77,7 +77,6 @@ public class Peer implements PeerInterface{
             Peer peer = new Peer(args);
 
 
-            System.out.println("started");
             PeerInterface stub = (PeerInterface) UnicastRemoteObject.exportObject(peer, 1099);
 
             LocateRegistry.createRegistry(1099);
@@ -92,20 +91,19 @@ public class Peer implements PeerInterface{
     }
 
     public void processInfo(String type, String[] TestAppArgs) throws IOException{
-        System.out.println("inside processInfo");
-        System.out.println(type);
         switch(type){
             case "BACKUP":
-                backup(TestAppArgs);
                 System.out.println("Backup required");
+                backup(TestAppArgs);
                 break;
             case "RESTORE":
                 restore(TestAppArgs);
                 System.out.println("Restore required");
+                //restore():
                 break;
             case "DELETE":
-                delete(TestAppArgs);
                 System.out.println("Delete required");
+                delete(TestAppArgs);
                 break;
         }
     }
@@ -124,6 +122,7 @@ public class Peer implements PeerInterface{
       System.out.println("File splitted");
       FileInfo f = new FileInfo(fileName, sha256(fileName), repDeg, file1.length());
       this.metadata.addFile(f);
+      //FileData.save(this.filedata,this.serverID);
       Metadata.save(this.metadata, this.serverID);
     }
 
@@ -137,7 +136,7 @@ public class Peer implements PeerInterface{
         ArrayList temp = this.filedata.getFiles().get(file);
         if(temp == null)
             return false;
-        System.out.println(temp);
+
         return temp.contains(chunkNo);
     }
 

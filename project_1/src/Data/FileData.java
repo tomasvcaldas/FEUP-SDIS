@@ -3,14 +3,15 @@ package Data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by joao on 4/8/17.
  */
 public class FileData implements Serializable{
-    private HashMap<String, ArrayList> files;
+    private ConcurrentHashMap <String, ArrayList> files;
 
-    public FileData(){ this.files = new HashMap<>(); }
+    public FileData(){ this.files = new ConcurrentHashMap<>(); }
 
     public void addChunk(String hash, int chunkNo){
         if(!files.containsKey(hash)){
@@ -21,18 +22,6 @@ public class FileData implements Serializable{
     }
 
     public static void save(FileData f, String peer){
-       /* try{
-            new File("Peer_" + peer + "/data").mkdir();
-            PrintWriter writer = new PrintWriter("Peer_" + peer + "/data/filedata.txt", "UTF-8");
-
-            writer.println(f.toString());
-            writer.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("metadata file not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream on save");
-        }
-*/
 
         try{
             new File("Peer_" + peer + "/data").mkdir();
@@ -71,7 +60,7 @@ public class FileData implements Serializable{
         return ret;
     }
 
-    public HashMap<String, ArrayList> getFiles() {
+    public ConcurrentHashMap<String, ArrayList> getFiles() {
         return files;
     }
 }
