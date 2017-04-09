@@ -1,6 +1,7 @@
 package Channels;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -104,10 +105,12 @@ public class BackupChannel extends Channel {
 
 		byte[] bStored = stored.getBytes();
 
-		DatagramPacket packet = new DatagramPacket(bStored, bStored.length, this.peer.getMc().getAdress(),this.peer.getMc().getPort());
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		outputStream.write(bStored);
+		byte c[] = outputStream.toByteArray();
+
+		DatagramPacket packet = new DatagramPacket(c, c.length, this.peer.getMc().getAdress(),this.peer.getMc().getPort());
 		this.peer.getMc().getSocket().send(packet);
-
-
 
 	}
 
