@@ -21,6 +21,18 @@ public class FileData implements Serializable{
     }
 
     public static void save(FileData f, String peer){
+       /* try{
+            new File("Peer_" + peer + "/data").mkdir();
+            PrintWriter writer = new PrintWriter("Peer_" + peer + "/data/filedata.txt", "UTF-8");
+
+            writer.println(f.toString());
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("metadata file not found");
+        } catch (IOException e) {
+            System.out.println("Error initializing stream on save");
+        }
+*/
 
         try{
             new File("Peer_" + peer + "/data").mkdir();
@@ -35,7 +47,6 @@ public class FileData implements Serializable{
         } catch (IOException e) {
             System.out.println("Error initializing stream on save");
         }
-
     }
 
     public static FileData load(String path){
