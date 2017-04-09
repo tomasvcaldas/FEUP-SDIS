@@ -5,6 +5,7 @@ import Channels.ControlChannel;
 import Data.FileData;
 import Data.FileInfo;
 import Data.Metadata;
+import Protocols.Delete;
 import com.sun.xml.internal.fastinfoset.sax.SystemIdResolver;
 
 import java.io.File;
@@ -140,6 +141,10 @@ public class Peer implements PeerInterface{
 
     public ControlChannel getMc() {
         return mc;
+    }
+
+    public void deleteChunks(String fileID){
+        Delete.deleteChunks(fileID, this.serverID);
     }
 
     public FileData getFileData(){

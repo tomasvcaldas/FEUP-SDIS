@@ -3,14 +3,11 @@ package Channels;
 
 import Utilities.Header;
 import Utilities.Message;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import fileManage.MessageType;
 import peer.Peer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-
-import static Protocols.Delete.deleteChunks;
 
 public class ControlChannel extends Channel {
 
@@ -38,7 +35,7 @@ public class ControlChannel extends Channel {
 
                     if(headerArgs.getType() == MessageType.DELETE){
                         System.out.println("DELETE received, starting the handle...");
-                        deleteChunks(headerArgs.getFileId(), peer.serverID);
+                        peer.deleteChunks(headerArgs.getFileId());
                     }
 
                 } catch(Exception e){
