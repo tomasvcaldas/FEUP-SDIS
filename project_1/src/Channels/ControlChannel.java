@@ -65,9 +65,10 @@ public class ControlChannel extends Channel {
                     }
                     else if(headerArgs.getType() == MessageType.GETCHUNK){
                         if(!headerArgs.getSenderId().equals(peer.serverID)){
-                            if(peer.getFileData().hasChunk(headerArgs.getFileId(), headerArgs.getChunkNumber()))
+                            if(peer.getFileData().hasChunk(headerArgs.getFileId(), headerArgs.getChunkNumber())) {
+                                peer.waitingForChunk = true;
                                 tryToSendChunk(headerArgs.getFileId(), headerArgs.getChunkNumber());
-                            else
+                            } else
                                 System.out.println("This peer doesn't have the chunk...");
                         }
                     }
@@ -79,7 +80,7 @@ public class ControlChannel extends Channel {
         }
     }
 
-    public void tryToSendChunk(String fileID, String chunkNo) throws IOException{
+    public void tryToSendChunk(String fileID, String chunkNo) throws IOException, InterruptedException {
         File f = new File("Peer_" + peer.serverID + "/" + fileID + "/" + chunkNo);
         byte[] body = Files.readAllBytes(f.toPath());
         String header = Message.createChunkHeader(peer.serverID, fileID, chunkNo);
@@ -90,16 +91,12 @@ public class ControlChannel extends Channel {
 
         byte c[] = outputStream.toByteArray( );
 
-        //temporario
-        DatagramPacket packet = new DatagramPacket(c, c.length,peer.getMdr().getAdress(),peer.getMdr().getPort());
-        peer.getMdr().getSocket().send(packet);
+        getThread().sleep(new Random().nextInt(400));
 
-        //TODO ver se o chunk ja foi enviado
-
-        /*if(!Restore.chunkExists(chunkNo)){
+        if(peer.waitingForChunk){
             DatagramPacket packet = new DatagramPacket(c, c.length,peer.getMdr().getAdress(),peer.getMdr().getPort());
             peer.getMdr().getSocket().send(packet);
-        }*/
+        }
     }
 
 }
