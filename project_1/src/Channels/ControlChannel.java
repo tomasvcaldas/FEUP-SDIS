@@ -70,7 +70,7 @@ public class ControlChannel extends Channel {
 
         byte c[] = outputStream.toByteArray( );
 
-        if(!Restore.chunkExists(fileID, chunkNo)){
+        if(!Restore.chunkExists(chunkNo)){
             DatagramPacket packet = new DatagramPacket(c, c.length,peer.getMdr().getAdress(),peer.getMdr().getPort());
             peer.getMdr().getSocket().send(packet);
         }
