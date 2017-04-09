@@ -23,7 +23,9 @@ public class SplitFile {
 
 			int tmp = 0;
 			while((tmp = bis.read(buffer)) > 0){
+
 				chunkCounter++;
+
 
 				String hashedFile = sha256(fileName);
 				String header = createPutHeader(serverID,hashedFile,chunkCounter, repDeg);
@@ -32,7 +34,7 @@ public class SplitFile {
 
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
 				outputStream.write( BHeader );
-				outputStream.write( buffer );
+				outputStream.write( buffer,0,tmp );
 
 				byte c[] = outputStream.toByteArray( );
 
