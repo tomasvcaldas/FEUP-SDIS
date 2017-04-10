@@ -74,9 +74,6 @@ public class Peer implements PeerInterface{
 
         if(this.filedata == null)
             this.filedata = new FileData();
-
-        System.out.println(this.filedata.getFiles().get(sha256("tomas.jpg")));
-
     }
 
     public static void main(String[] args){
@@ -158,6 +155,8 @@ public class Peer implements PeerInterface{
 
     public void deleteChunks(String fileID){
         Delete.deleteChunks(fileID, this.serverID);
+        this.filedata.removeFile(fileID);
+        this.filedata.save(this.filedata, this.serverID);
     }
 
     public static RestoreChannel getMdr() { return mdr; }
