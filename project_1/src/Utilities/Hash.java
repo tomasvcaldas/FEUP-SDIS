@@ -3,6 +3,11 @@ package Utilities;
 import java.security.MessageDigest;
 
 public class Hash {
+    /**
+     * Hases the received string
+     * @param fileID received string
+     * @return hashed string
+     */
     public static String sha256(String fileID){
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

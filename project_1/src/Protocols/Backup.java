@@ -15,7 +15,16 @@ import static java.sql.Types.NULL;
 public class Backup {
 
 	//http://stackoverflow.com/questions/10864317/how-to-break-a-file-into-pieces-using-java
-	
+
+    /**
+     * Splits the file in all the chunks and calls the function to send each one of them
+     * @param fileName File name
+     * @param repDeg Replication Degree
+     * @param serverId Server Id
+     * @param mdb Backup Channel
+     * @param peer Respective per
+     * @throws IOException
+     */
 	public static void splitFile(String fileName, int repDeg, String serverId, BackupChannel mdb, Peer peer) throws IOException{
 		File f = new File(fileName);
 		int chunkCounter = 0;
@@ -40,6 +49,18 @@ public class Backup {
 		}
 	}
 
+    /**
+     * Creates the packet with the Header and Body
+     * @param chunkCounter chunk number
+     * @param fileId fileId
+     * @param repDeg Replication degree
+     * @param buffer body
+     * @param tmp length
+     * @param serverID server Id
+     * @param mdb BackupChannel
+     * @return returns created packet
+     * @throws IOException
+     */
 	public static DatagramPacket createBackupPacket(int chunkCounter,String fileId,int repDeg, byte[] buffer, int tmp, int serverID, BackupChannel mdb) throws IOException {
 
 
@@ -57,6 +78,17 @@ public class Backup {
 		return packet;
 	}
 
+    /**
+     * Tries to send all the putchunk messages( 5 times max )
+     * @param packet packet to send
+     * @param repDeg replication degree
+     * @param fileName file name
+     * @param mb BackupChannel
+     * @param chunkCounter chunk Number
+     * @param peer Respective peer
+     * @throws IOException
+     * @throws InterruptedException
+     */
 	public static void backupChunk(DatagramPacket packet, int repDeg,String fileName,BackupChannel mb,String chunkCounter, Peer peer) throws IOException, InterruptedException {
 		int receivedSize;
 

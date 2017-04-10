@@ -33,6 +33,11 @@ public class Channel{
 		this.thread.start();
 	}
 
+    /**
+     * Receives the packet that is going to be handled
+     * @return Packet received
+     * @throws IOException
+     */
 	public DatagramPacket getMulticastData() throws IOException{
 			byte[] buf = new byte[65000];
 			DatagramPacket packet = new DatagramPacket(buf,buf.length);

@@ -33,6 +33,11 @@ public class Delete {
 
     }
 
+    /**
+     * Deletes the chunks in the respective folders
+     * @param fileName Respective file id of the chunks
+     * @param peer Peer
+     */
     public static void deleteChunks(String fileName, String peer) {
         final String filePath = System.getProperty("user.dir");
 

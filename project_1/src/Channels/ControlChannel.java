@@ -72,7 +72,13 @@ public class ControlChannel extends Channel {
 
     }
 
-
+    /**
+     * Creates and sends the message with the GETCHUNK for the RESTORE protocol.
+     * @param fileID fileId of the chunk
+     * @param chunkNo chunk Numer of the chunk
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void tryToSendChunk(String fileID, String chunkNo) throws IOException, InterruptedException {
         File f = new File("Peer_" + peer.serverID + "/" + fileID + "/" + chunkNo);
         byte[] body = Files.readAllBytes(f.toPath());

@@ -40,7 +40,7 @@ public class Peer implements PeerInterface{
     public Peer(String[] args) throws IOException{
         this.serverID = args[0];
         new File("Peer_" + this.serverID).mkdir();
-
+        System.out.println("Peer: " + this.serverID);
         loadData();
 
         this.mdb = new BackupChannel(args[3], args[4], this);
@@ -55,6 +55,9 @@ public class Peer implements PeerInterface{
         this.restored = null;
     }
 
+    /**
+     * loads filedata and metadata at the start
+     */
     public void loadData(){
         this.metadata = Metadata.load("Peer_" +  this.serverID + "/data/metadata.txt");
 
@@ -80,6 +83,12 @@ public class Peer implements PeerInterface{
         }
     }
 
+    /**
+     * Verifies the protocol requested in the message received
+     * @param type type of protocol
+     * @param TestAppArgs Arguments passed in  testApp
+     * @throws IOException
+     */
     public void processInfo(String type, String[] TestAppArgs) throws IOException{
         switch(type){
             case "BACKUP":
@@ -97,13 +106,23 @@ public class Peer implements PeerInterface{
         }
     }
 
+    /**
+     * main restore function
+     * @param args test app args
+     * @throws IOException
+     */
     public void restore(String[] args) throws IOException{
         String fileName = args[2];
         this.restored = new Restore(fileName, this);
         this.restored.sendGetChunkMessage();
-        System.out.println("Final RESTORES function.");
+        System.out.println("Final RESTORE function.");
     }
 
+    /**
+     * main backup function
+     * @param args test app args
+     * @throws IOException
+     */
     public void backup(String[] args) throws IOException{
       String fileName = args[2];
       File file1 = new File(fileName);
@@ -117,12 +136,23 @@ public class Peer implements PeerInterface{
       System.out.println("Final BACKUP function.");
     }
 
+    /**
+     * main delete function
+     * @param args test app args
+     * @throws IOException
+     */
     public void delete(String[] args) throws IOException{
         String fileName = args[2];
         Delete(fileName, Peer.serverID, this.mc);
         System.out.println("Final DELETE function.");
     }
 
+    /**
+     * verifies if the chunk with that number already exists in the filedata
+     * @param file
+     * @param chunkNo
+     * @return
+     */
     public boolean chunkExists(String file, int chunkNo){
         ArrayList temp = this.filedata.getFiles().get(file);
         if(temp == null)

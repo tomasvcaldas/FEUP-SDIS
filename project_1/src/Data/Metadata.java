@@ -18,6 +18,11 @@ public class Metadata implements Serializable{
         return backupArray;
     }
 
+    /**
+     * Saves the new information in the METADATA file
+     * @param m respective metadata
+     * @param peer respective peer
+     */
     public static void save(Metadata m, String peer){
         try{
             new File("Peer_" + peer + "/data").mkdir();
@@ -35,6 +40,11 @@ public class Metadata implements Serializable{
 
     }
 
+    /**
+     * Loads the metadata file
+     * @param path path of the metadata file
+     * @return Metadata file required
+     */
     public static Metadata load(String path){
         Metadata ret = null;
 

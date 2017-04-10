@@ -15,6 +15,13 @@ public class FileData implements Serializable{
 
     public FileData(){ this.files = new ConcurrentHashMap<>(); }
 
+    /**
+     * Adds chunk to the respective key
+     * @param hash HashMap key
+     * @param chunkNo chunk number
+     * @param size body length
+     * @param rep_deg replication degree
+     */
     public void addChunk(String hash, int chunkNo, int size, int rep_deg){
         if(!files.containsKey(hash)){
             files.put(hash, new ArrayList());
@@ -23,6 +30,11 @@ public class FileData implements Serializable{
         files.get(hash).add(chunk);
     }
 
+    /**
+     * Saves the information of the stored chunk in the FILEDATA file.
+     * @param f File data
+     * @param peer Respective peer
+     */
     public static void save(FileData f, String peer){
 
         try{
@@ -40,6 +52,11 @@ public class FileData implements Serializable{
         }
     }
 
+    /**
+     * Loads the information from the filedata
+     * @param path File path
+     * @return filedata loaded
+     */
     public static FileData load(String path){
         FileData ret = null;
 
@@ -49,7 +66,7 @@ public class FileData implements Serializable{
 
             ret = (FileData) oi.readObject();
 
-            System.out.println(ret.files.get(sha256("photo.jpg")));
+            //System.out.println(ret.files.get(sha256("photo.jpg")));
 
             oi.close();
             fi.close();
@@ -68,6 +85,12 @@ public class FileData implements Serializable{
         return files;
     }
 
+    /**
+     * Verifies if the chunk with that chunk number already exists
+     * @param fileID File Name
+     * @param chunkNo chunk number
+     * @return boolean true/false
+     */
     public boolean hasChunk(String fileID, String chunkNo){
         if(files.containsKey(fileID)){
             ArrayList temp = files.get(fileID);

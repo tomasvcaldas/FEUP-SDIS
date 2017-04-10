@@ -33,6 +33,10 @@ public class Restore {
         this.restores = new HashMap<>();
     }
 
+    /**
+     * Creates the GETCHUNK message and sends it
+     * @throws IOException
+     */
     public void sendGetChunkMessage() throws IOException{
         String message = Message.createGetChunkHeader(this.hashed, this.peer.serverID, this.nextChunk);
 

@@ -89,6 +89,12 @@ public class BackupChannel extends Channel {
 
     }
 
+    /**
+     * Handles the message of the putchunk recieved and stores the chunk in the peer..
+     * @param header Header of the message
+     * @param body Body with the chunk content
+     * @throws IOException
+     */
 	private void PutchunkReceived(Header header, byte[] body) throws IOException{
 		String fileID = header.getFileId();
 		int chunkNo = Integer.parseInt(header.getChunkNumber());
@@ -113,6 +119,13 @@ public class BackupChannel extends Channel {
 
 	}
 
+    /**
+     * Creates the packet with all the chunk information and the required arguments of the header.
+     * @param header Message header
+     * @param body Chunk content
+     * @return Returns the created packet.
+     * @throws IOException
+     */
 	public DatagramPacket createStored(Header header, byte[] body) throws IOException {
         String fileID = header.getFileId();
         int chunkNo = Integer.parseInt(header.getChunkNumber());
@@ -128,6 +141,11 @@ public class BackupChannel extends Channel {
         return packet;
     }
 
+    /**
+     * Sends the reply with the STORED message after the chunk was created.
+     * @param packet Packet with the STORED message
+     * @throws IOException
+     */
     public void sendStored(DatagramPacket packet) throws IOException {
         this.peer.getMc().getSocket().send(packet);
     }

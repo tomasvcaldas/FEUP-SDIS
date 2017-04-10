@@ -38,7 +38,7 @@ public class RestoreChannel extends Channel {
                     byte[] body = message.getBody();
 
                     if(headerArgs.getType() == MessageType.CHUNK){
-                        System.out.println("CHUNK received, starting the handle..." + headerArgs.getSenderId());
+                        System.out.println("RECEIVED CHUNK with NUMBER: " + headerArgs.getChunkNumber() + "from SENDER: " + headerArgs.getSenderId());
                         peer.waitingForChunk = false;
                         processMessage(headerArgs.getChunkNumber(), body);
                     }
@@ -50,6 +50,12 @@ public class RestoreChannel extends Channel {
 
     }
 
+    /**
+     * Processes the message received with the CHUNK of the RESTORE protocol
+     * @param chunk chunk number of the message received
+     * @param body content of the chunk
+     * @throws IOException
+     */
     public void processMessage(String chunk, byte[] body) throws IOException{
         peer.getRestored().putByte(chunk, body);
         if(peer.getRestored() != null) {

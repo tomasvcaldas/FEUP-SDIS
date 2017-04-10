@@ -14,6 +14,12 @@ public class mergeFile {
 
 	//http://stackoverflow.com/questions/10864317/how-to-break-a-file-into-pieces-using-java
 
+	/**
+	 * Merges all the files for the restore
+	 * @param body body contents
+	 * @param into File to merge
+	 * @throws IOException
+	 */
 	public static void mergeFiles(ArrayList<byte[]> body, File into) throws IOException {
 		into.getParentFile().mkdirs();
 		try (BufferedOutputStream mergingStream = new BufferedOutputStream(
