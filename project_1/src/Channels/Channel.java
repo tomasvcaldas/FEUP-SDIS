@@ -37,10 +37,10 @@ public class Channel{
 			byte[] buf = new byte[65000];
 			DatagramPacket packet = new DatagramPacket(buf,buf.length);
 			multicastsocket.receive(packet);
-			System.out.println("DASDSADSADSA00");
-
 			return packet;
 	}
+
+
 
 	
 

@@ -8,11 +8,9 @@ import Data.FileInfo;
 import Data.Metadata;
 import Protocols.Delete;
 import Protocols.Restore;
-import com.sun.xml.internal.fastinfoset.sax.SystemIdResolver;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -20,8 +18,7 @@ import java.util.ArrayList;
 
 import static Protocols.Delete.Delete;
 import static Utilities.Hash.sha256;
-import static fileManage.SplitFile.backupChunk;
-import static fileManage.SplitFile.splitFile;
+import static Protocols.Backup.splitFile;
 
 
 
@@ -31,18 +28,12 @@ public class Peer implements PeerInterface{
     public static String serverID;
     private Metadata metadata;
     private FileData filedata;
-
     private Restore restored;
-
     private static BackupChannel mdb;
     private static ControlChannel mc;
     private static RestoreChannel mdr;
-
     public boolean waitingForChunk = true;
 
-    //private DatagramSocket socket;
-
-    //private Thread dataThread;
 
     private Peer peer;
 
@@ -55,7 +46,6 @@ public class Peer implements PeerInterface{
         this.mdb = new BackupChannel(args[3], args[4], this);
         this.mc = new ControlChannel(args[1],args[2],this);
         this.mdr = new RestoreChannel(args[5], args[6], this);
-        //creating directory with Peer id
 
         this.mdb.startThread();
         this.mc.startThread();
@@ -80,13 +70,8 @@ public class Peer implements PeerInterface{
     public static void main(String[] args){
         try {
             Peer peer = new Peer(args);
-
-
             PeerInterface stub = (PeerInterface) UnicastRemoteObject.exportObject(peer, 1099);
-
             LocateRegistry.createRegistry(1099);
-
-            //Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
             registry.bind("processInfo", stub);
 
@@ -102,9 +87,8 @@ public class Peer implements PeerInterface{
                 backup(TestAppArgs);
                 break;
             case "RESTORE":
-                restore(TestAppArgs);
                 System.out.println("Restore required");
-                //restore():
+                restore(TestAppArgs);
                 break;
             case "DELETE":
                 System.out.println("Delete required");
@@ -117,25 +101,26 @@ public class Peer implements PeerInterface{
         String fileName = args[2];
         this.restored = new Restore(fileName, this);
         this.restored.sendGetChunkMessage();
+        System.out.println("Final RESTORES function.");
     }
 
     public void backup(String[] args) throws IOException{
       String fileName = args[2];
       File file1 = new File(fileName);
       int repDeg = Integer.parseInt(args[3]);
-      System.out.println("Splitting file");
+
       splitFile(fileName,repDeg,Peer.serverID,this.mdb,this);
-      System.out.println("File splitted");
+      System.out.println("All CHUNKS were sent SUCCESSFULLY!");
+
       FileInfo f = new FileInfo(fileName, sha256(fileName), repDeg, file1.length());
-      this.metadata.addFile(f);
-      //FileData.save(this.filedata,this.serverID);
       Metadata.save(this.metadata, this.serverID);
+      System.out.println("Final BACKUP function.");
     }
 
     public void delete(String[] args) throws IOException{
         String fileName = args[2];
         Delete(fileName, Peer.serverID, this.mc);
-        System.out.println("final delete function");
+        System.out.println("Final DELETE function.");
     }
 
     public boolean chunkExists(String file, int chunkNo){

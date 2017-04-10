@@ -40,14 +40,13 @@ public class ControlChannel extends Channel {
 
                     Header headerArgs = message.getHeader();
 
-                    System.out.println("MSG TYPE RECEIVED IN CNTRL CHANNEL: " + headerArgs.getType());
                     if(headerArgs.getType() == MessageType.DELETE){
-                        System.out.println("DELETE received, starting the handle...");
+                        System.out.println("RECEIVED DELETE with NUMBER: " + headerArgs.getChunkNumber());
                         peer.deleteChunks(headerArgs.getFileId());
 
                     }
                     else if(headerArgs.getType() == MessageType.STORED){
-                        System.out.println("STORED received, starting the handle...");
+                        System.out.println("RECEIVED STORE with NUMBER: " + headerArgs.getChunkNumber());
                         if(!receivedStores.containsKey(headerArgs.getFileId()))
                             receivedStores.put(headerArgs.getFileId(), new ConcurrentHashMap<>());
                         if(!receivedStores.get(headerArgs.getFileId()).containsKey(headerArgs.getChunkNumber()))

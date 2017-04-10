@@ -68,8 +68,9 @@ public class BackupChannel extends Channel {
 
                 if(!headerArgs.getSenderId().equals(peer.serverID)){
                     if(headerArgs.getType() == MessageType.PUTCHUNK){
-                        System.out.println("PUTCHUNK received, starting the handle...");
+                        System.out.println("RECEIVED PUTCHUNK with NUMBER: " + headerArgs.getChunkNumber());
                         PutchunkReceived(headerArgs,body);
+                        //REPLY
                         DatagramPacket storePacket = createStored(headerArgs,body);
                         int delay = ThreadLocalRandom.current().nextInt(0,400);
                         this.sleep(delay);

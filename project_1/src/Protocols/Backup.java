@@ -1,4 +1,4 @@
-package fileManage;
+package Protocols;
 
 import Channels.BackupChannel;
 import peer.Peer;
@@ -12,7 +12,7 @@ import static Utilities.Hash.sha256;
 import static Utilities.Message.createPutHeader;
 import static java.sql.Types.NULL;
 
-public class SplitFile {
+public class Backup {
 
 	//http://stackoverflow.com/questions/10864317/how-to-break-a-file-into-pieces-using-java
 	
@@ -21,6 +21,7 @@ public class SplitFile {
 		int chunkCounter = 0;
 		int serverID = Integer.parseInt(serverId);
 		int chunkSize = 64000;
+		String fileId = sha256(fileName);
 		
 		byte[] buffer = new byte[chunkSize];
 
@@ -28,25 +29,10 @@ public class SplitFile {
 
 			int tmp = 0;
 			while((tmp = bis.read(buffer)) > 0){
-
 				chunkCounter++;
-
-
-				String hashedFile = sha256(fileName);
-				String header = createPutHeader(serverID,hashedFile,chunkCounter, repDeg);
-
-				byte[] BHeader = header.getBytes();
-
-				ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-				outputStream.write( BHeader );
-				outputStream.write( buffer,0,tmp );
-
-				byte c[] = outputStream.toByteArray( );
-
-				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
-
+				DatagramPacket packet = createBackupPacket(chunkCounter,fileId,repDeg,buffer,tmp,serverID,mdb);
 				mdb.getSocket().send(packet);
-				backupChunk(packet,repDeg,hashedFile,mdb,String.valueOf(chunkCounter), peer);
+				backupChunk(packet,repDeg,fileId,mdb,String.valueOf(chunkCounter), peer);
 
 			}
 		} catch (InterruptedException e) {
@@ -54,10 +40,25 @@ public class SplitFile {
 		}
 	}
 
+	public static DatagramPacket createBackupPacket(int chunkCounter,String fileId,int repDeg, byte[] buffer, int tmp, int serverID, BackupChannel mdb) throws IOException {
+
+
+		String header = createPutHeader(serverID,fileId,chunkCounter, repDeg);
+
+		byte[] BHeader = header.getBytes();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+		outputStream.write( BHeader );
+		outputStream.write( buffer,0,tmp );
+
+		byte c[] = outputStream.toByteArray( );
+
+		DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
+		return packet;
+	}
+
 	public static void backupChunk(DatagramPacket packet, int repDeg,String fileName,BackupChannel mb,String chunkCounter, Peer peer) throws IOException, InterruptedException {
 		int receivedSize;
-		
-		System.out.println("ENTROU NO BACKUPCHUNK");
 
 		if(peer.getMc().getReceivedStores().get(fileName) == null || peer.getMc().getReceivedStores().get(fileName).get(chunkCounter) == null)
 			receivedSize = 0;
@@ -72,6 +73,7 @@ public class SplitFile {
 		while(receivedSize < repDeg && maxTries < 5){
 			maxTries++;
 			mb.getSocket().send(packet);
+			System.out.println("SENDING PUTCHUNK with CHUNKNUMBER: " + chunkCounter);
 			delay = delay * 2;
 			if(peer.getMc().getReceivedStores().get(fileName) == null || peer.getMc().getReceivedStores().get(fileName).get(chunkCounter) == null)
 				receivedSize = 0;
