@@ -5,18 +5,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static Utilities.Hash.sha256;
 
+/**
+ * Created by joao on 4/8/17.
+ */
 public class FileData implements Serializable{
-    private ConcurrentHashMap <String, ArrayList> files;
+    private ConcurrentHashMap <String, ArrayList<ChunkInfo>> files;
 
     public FileData(){ this.files = new ConcurrentHashMap<>(); }
 
-    public void addChunk(String hash, int chunkNo){
+    public void addChunk(String hash, int chunkNo, int size, int rep_deg){
         if(!files.containsKey(hash)){
             files.put(hash, new ArrayList());
         }
-
-        files.get(hash).add(chunkNo);
+        ChunkInfo chunk = new ChunkInfo(chunkNo, rep_deg, size);
+        files.get(hash).add(chunk);
     }
 
     public static void save(FileData f, String peer){
@@ -45,6 +49,8 @@ public class FileData implements Serializable{
 
             ret = (FileData) oi.readObject();
 
+            System.out.println(ret.files.get(sha256("photo.jpg")));
+
             oi.close();
             fi.close();
 
@@ -58,7 +64,7 @@ public class FileData implements Serializable{
         return ret;
     }
 
-    public ConcurrentHashMap<String, ArrayList> getFiles() {
+    public ConcurrentHashMap<String, ArrayList<ChunkInfo>> getFiles() {
         return files;
     }
 
@@ -68,5 +74,9 @@ public class FileData implements Serializable{
             return temp.contains(Integer.parseInt(chunkNo));
         }
         return false;
+    }
+
+    public void removeFile(String fileID){
+        this.files.remove(sha256(fileID));
     }
 }

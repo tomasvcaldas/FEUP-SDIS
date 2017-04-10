@@ -99,7 +99,7 @@ public class BackupChannel extends Channel {
 			return;
 		}
 
-		this.peer.getFileData().addChunk(fileID, chunkNo);
+		this.peer.getFileData().addChunk(fileID, chunkNo, body.length/1000, Integer.parseInt(header.getReplicationDegree()));
         this.peer.getFileData().save(this.peer.getFileData(), this.peer.serverID);
 
 
