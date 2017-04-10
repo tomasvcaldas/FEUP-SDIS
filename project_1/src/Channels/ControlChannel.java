@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ControlChannel extends Channel {
-    public static ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> receivedStores;
+    public ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> receivedStores;
 
     private Peer peer;
 
@@ -53,7 +53,6 @@ public class ControlChannel extends Channel {
                         if(!receivedStores.get(headerArgs.getFileId()).containsKey(headerArgs.getChunkNumber()))
                             receivedStores.get(headerArgs.getFileId()).put(headerArgs.getChunkNumber(), new HashSet<>());
                         receivedStores.get(headerArgs.getFileId()).get(headerArgs.getChunkNumber()).add(headerArgs.getSenderId());
-
                     }
                     else if(headerArgs.getType() == MessageType.GETCHUNK){
                         if(!headerArgs.getSenderId().equals(peer.serverID)){
@@ -74,6 +73,7 @@ public class ControlChannel extends Channel {
 
     }
 
+
     public void tryToSendChunk(String fileID, String chunkNo) throws IOException, InterruptedException {
         File f = new File("Peer_" + peer.serverID + "/" + fileID + "/" + chunkNo);
         byte[] body = Files.readAllBytes(f.toPath());
@@ -93,7 +93,7 @@ public class ControlChannel extends Channel {
         }
     }
 
-    public static ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> getReceivedStores(){
+    public ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> getReceivedStores(){
         return receivedStores;
     }
 

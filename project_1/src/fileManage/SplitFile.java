@@ -1,6 +1,7 @@
 package fileManage;
 
 import Channels.BackupChannel;
+import peer.Peer;
 
 import javax.xml.crypto.Data;
 import java.io.*;
@@ -9,14 +10,13 @@ import java.util.Scanner;
 
 import static Utilities.Hash.sha256;
 import static Utilities.Message.createPutHeader;
-import static Channels.ControlChannel.getReceivedStores;
 import static java.sql.Types.NULL;
 
 public class SplitFile {
 
 	//http://stackoverflow.com/questions/10864317/how-to-break-a-file-into-pieces-using-java
 	
-	public static void splitFile(String fileName, int repDeg, String serverId, BackupChannel mdb, String peer_id) throws IOException{
+	public static void splitFile(String fileName, int repDeg, String serverId, BackupChannel mdb, Peer peer) throws IOException{
 		File f = new File(fileName);
 		int chunkCounter = 0;
 		int serverID = Integer.parseInt(serverId);
@@ -46,7 +46,7 @@ public class SplitFile {
 				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
 
 				mdb.getSocket().send(packet);
-				backupChunk(packet,repDeg,hashedFile,serverId,peer_id,mdb,chunkCounter);
+				backupChunk(packet,repDeg,hashedFile,mdb,String.valueOf(chunkCounter), peer);
 
 			}
 		} catch (InterruptedException e) {
@@ -54,21 +54,34 @@ public class SplitFile {
 		}
 	}
 
-	public static void backupChunk(DatagramPacket packet, int repDeg,String fileName,String serverId,String peerId,BackupChannel mb,int chunkCounter) throws IOException, InterruptedException {
+	public static void backupChunk(DatagramPacket packet, int repDeg,String fileName,BackupChannel mb,String chunkCounter, Peer peer) throws IOException, InterruptedException {
 		int receivedSize;
+		
 		System.out.println("ENTROU NO BACKUPCHUNK");
-		System.out.println(getReceivedStores().get(fileName));
-		if(getReceivedStores().get(fileName) == null || getReceivedStores().get(fileName).get(chunkCounter) == null)
+
+		if(peer.getMc().getReceivedStores().get(fileName) == null || peer.getMc().getReceivedStores().get(fileName).get(chunkCounter) == null)
 			receivedSize = 0;
 		else
-			receivedSize = getReceivedStores().get(fileName).get(chunkCounter).size();
+			receivedSize = peer.getMc().getReceivedStores().get(fileName).get(chunkCounter).size();
 
 		long delay = 1000;
-		for (int i = receivedSize; i <= repDeg; i++){
-			mb.getThread().sleep(delay);
+
+		int maxTries = 0;
+
+		mb.getThread().sleep(delay);
+		while(receivedSize < repDeg && maxTries < 5){
+			maxTries++;
 			mb.getSocket().send(packet);
-			System.out.println("SENDING CHUNK: " + chunkCounter);
-			delay = delay *2 ;
-			}
+			delay = delay * 2;
+			if(peer.getMc().getReceivedStores().get(fileName) == null || peer.getMc().getReceivedStores().get(fileName).get(chunkCounter) == null)
+				receivedSize = 0;
+			else
+				receivedSize = peer.getMc().getReceivedStores().get(fileName).get(chunkCounter).size();
+			mb.getThread().sleep(delay);
+		}
+
+		if(maxTries > 5){
+			System.out.println("Aborting backup. Exceeding max timeout...");
+		}
 	}
 }

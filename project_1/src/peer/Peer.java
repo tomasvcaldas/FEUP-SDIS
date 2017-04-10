@@ -124,7 +124,7 @@ public class Peer implements PeerInterface{
       File file1 = new File(fileName);
       int repDeg = Integer.parseInt(args[3]);
       System.out.println("Splitting file");
-      splitFile(fileName,repDeg,Peer.serverID,this.mdb, this.serverID);
+      splitFile(fileName,repDeg,Peer.serverID,this.mdb,this);
       System.out.println("File splitted");
       FileInfo f = new FileInfo(fileName, sha256(fileName), repDeg, file1.length());
       this.metadata.addFile(f);
