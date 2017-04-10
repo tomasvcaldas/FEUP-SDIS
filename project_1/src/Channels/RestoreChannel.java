@@ -58,7 +58,7 @@ public class RestoreChannel extends Channel {
      */
     public void processMessage(String chunk, byte[] body) throws IOException{
         peer.getRestored().putByte(chunk, body);
-        if(peer.getRestored() != null) {
+        //if(peer.getRestored() != null) {
             if (body.length >= 64000) {
                 peer.getRestored().sendGetChunkMessage();
             } else {
@@ -67,5 +67,5 @@ public class RestoreChannel extends Channel {
                 mergeFiles(peer.getRestored().getBytes(), f);
             }
         }
-    }
+    //}
 }
