@@ -103,6 +103,9 @@ public class Peer implements PeerInterface{
                 System.out.println("Delete required");
                 delete(TestAppArgs);
                 break;
+            case "RECLAIM":
+                System.out.println("Protocol not implemented. Exiting...");
+                break;
         }
     }
 
