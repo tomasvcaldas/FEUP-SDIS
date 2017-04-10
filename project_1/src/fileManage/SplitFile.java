@@ -55,8 +55,13 @@ public class SplitFile {
 	}
 
 	public static void backupChunk(DatagramPacket packet, int repDeg,String fileName,String serverId,String peerId,BackupChannel mb,int chunkCounter) throws IOException, InterruptedException {
-		
-		int receivedSize = getReceivedStores().get(fileName).get(chunkCounter).size();
+		int receivedSize;
+		System.out.println("ENTROU NO BACKUPCHUNK");
+		System.out.println(getReceivedStores().get(fileName));
+		if(getReceivedStores().get(fileName) == null || getReceivedStores().get(fileName).get(chunkCounter) == null)
+			receivedSize = 0;
+		else
+			receivedSize = getReceivedStores().get(fileName).get(chunkCounter).size();
 
 		long delay = 1000;
 		for (int i = receivedSize; i <= repDeg; i++){
