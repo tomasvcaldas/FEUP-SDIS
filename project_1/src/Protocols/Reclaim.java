@@ -15,7 +15,7 @@ public class Reclaim {
     private Peer peer;
     private int storage;
 
-    public Reclaim(int storage, Peer peer) throws IOException{
+    /*public Reclaim(int storage, Peer peer) throws IOException{
         this.peer = peer;
         this.peer.setMaxStrorage(storage);
         this.storage = storage;
@@ -54,5 +54,5 @@ public class Reclaim {
         byte[] message = header.getBytes();
         DatagramPacket packet = new DatagramPacket(message, message.length, this.peer.getMc().getAdress(), this.peer.getMc().getPort());
         this.peer.getMc().getSocket().send(packet);
-    }
+    }*/
 }

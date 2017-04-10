@@ -38,9 +38,11 @@ public class RestoreChannel extends Channel {
                     byte[] body = message.getBody();
 
                     if(headerArgs.getType() == MessageType.CHUNK){
-                        System.out.println("CHUNK received, starting the handle..." + headerArgs.getSenderId());
-                        peer.waitingForChunk = false;
-                        processMessage(headerArgs.getChunkNumber(), body);
+                        if (peer.getRestored() != null) {
+                            System.out.println("CHUNK received, starting the handle..." + headerArgs.getSenderId());
+                            peer.waitingForChunk = false;
+                            processMessage(headerArgs.getChunkNumber(), body);
+                        }
                     }
                 } catch(Exception e){
                 e.printStackTrace();
@@ -52,7 +54,7 @@ public class RestoreChannel extends Channel {
 
     public void processMessage(String chunk, byte[] body) throws IOException{
         peer.getRestored().putByte(chunk, body);
-        if(peer.getRestored() != null) {
+        //if(peer.getRestored() != null) {
             if (body.length >= 64000) {
                 peer.getRestored().sendGetChunkMessage();
             } else {
@@ -61,5 +63,5 @@ public class RestoreChannel extends Channel {
                 mergeFiles(peer.getRestored().getBytes(), f);
             }
         }
-    }
+    //}
 }

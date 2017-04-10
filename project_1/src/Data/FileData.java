@@ -69,11 +69,16 @@ public class FileData implements Serializable{
     }
 
     public boolean hasChunk(String fileID, String chunkNo){
+        boolean found = false;
         if(files.containsKey(fileID)){
-            ArrayList temp = files.get(fileID);
-            return temp.contains(Integer.parseInt(chunkNo));
+            ArrayList<ChunkInfo> temp = files.get(fileID);
+            System.out.println(temp);
+            for(int i = 0; i < temp.size(); i++){
+                if(temp.get(i).getID() == Integer.parseInt(chunkNo))
+                    found = true;
+            }
         }
-        return false;
+        return found;
     }
 
     public void removeFile(String fileID){
