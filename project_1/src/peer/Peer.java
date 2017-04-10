@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import static Protocols.Delete.Delete;
 import static Utilities.Hash.sha256;
+import static fileManage.SplitFile.backupChunk;
 import static fileManage.SplitFile.splitFile;
 
 

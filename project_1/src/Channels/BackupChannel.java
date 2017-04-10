@@ -6,10 +6,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import Utilities.Header;
 import Utilities.Message;
+
 
 import fileManage.MessageType;
 import peer.Peer;
@@ -19,7 +22,7 @@ import javax.xml.crypto.Data;
 public class BackupChannel extends Channel {
 
 	private Peer peer;
-	private boolean end = false;
+
 
 	public BackupChannel(String backupAddress, String backupPort, Peer peer ) throws IOException{
 		super(backupAddress,backupPort);
@@ -127,5 +130,6 @@ public class BackupChannel extends Channel {
     public void sendStored(DatagramPacket packet) throws IOException {
         this.peer.getMc().getSocket().send(packet);
     }
+
 
 }

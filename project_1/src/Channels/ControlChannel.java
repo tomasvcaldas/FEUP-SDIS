@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ControlChannel extends Channel {
-    private ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> receivedStores;
+    public static ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> receivedStores;
 
     private Peer peer;
 
@@ -24,7 +24,7 @@ public class ControlChannel extends Channel {
         super(controlAddress,controlPort);
         setThread(new ControlThread());
         this.peer = peer;
-        receivedStores = new ConcurrentHashMap<>();
+        this.receivedStores = new ConcurrentHashMap<>();
     }
 
     public class ControlThread extends Thread{
@@ -48,20 +48,12 @@ public class ControlChannel extends Channel {
                     }
                     else if(headerArgs.getType() == MessageType.STORED){
                         System.out.println("STORED received, starting the handle...");
-                        Set<String> senderId = new HashSet<>();
                         if(!receivedStores.containsKey(headerArgs.getFileId()))
                             receivedStores.put(headerArgs.getFileId(), new ConcurrentHashMap<>());
                         if(!receivedStores.get(headerArgs.getFileId()).containsKey(headerArgs.getChunkNumber()))
                             receivedStores.get(headerArgs.getFileId()).put(headerArgs.getChunkNumber(), new HashSet<>());
                         receivedStores.get(headerArgs.getFileId()).get(headerArgs.getChunkNumber()).add(headerArgs.getSenderId());
-//                        ConcurrentHashMap<Integer,Set<String>> file = new ConcurrentHashMap();
-//                        int chN = Integer.parseInt(headerArgs.getChunkNumber());
-//                        receivedStores.put(headerArgs.getFileId(),file(chN,senderId(headerArgs.getSenderId())));
-                        //receivedStores.put(headerArgs.getFileId(),file(chN,senderId(headerArgs.getSenderId())));
 
-                        //TODO codigo do stored, ver a contagem dos chunks que ja recebeu
-                        //TODO por causa do replication degree e esperar o tempo necessario
-                        //TODO para mandar outra vez
                     }
                     else if(headerArgs.getType() == MessageType.GETCHUNK){
                         if(!headerArgs.getSenderId().equals(peer.serverID)){
@@ -78,6 +70,8 @@ public class ControlChannel extends Channel {
                 }
             }
         }
+
+
     }
 
     public void tryToSendChunk(String fileID, String chunkNo) throws IOException, InterruptedException {
@@ -98,5 +92,10 @@ public class ControlChannel extends Channel {
             peer.getMdr().getSocket().send(packet);
         }
     }
+
+    public static ConcurrentHashMap<String,ConcurrentHashMap<String,Set<String>>> getReceivedStores(){
+        return receivedStores;
+    }
+
 
 }

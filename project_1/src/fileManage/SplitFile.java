@@ -2,12 +2,15 @@ package fileManage;
 
 import Channels.BackupChannel;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.util.Scanner;
 
 import static Utilities.Hash.sha256;
 import static Utilities.Message.createPutHeader;
+import static Channels.ControlChannel.getReceivedStores;
+import static java.sql.Types.NULL;
 
 public class SplitFile {
 
@@ -41,12 +44,26 @@ public class SplitFile {
 				byte c[] = outputStream.toByteArray( );
 
 				DatagramPacket packet = new DatagramPacket(c, c.length,mdb.getAdress(),mdb.getPort());
+
 				mdb.getSocket().send(packet);
-				System.out.println("SENDING PACKET: " + chunkCounter);
+				backupChunk(packet,repDeg,hashedFile,serverId,peer_id,mdb,chunkCounter);
 
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
+	public static void backupChunk(DatagramPacket packet, int repDeg,String fileName,String serverId,String peerId,BackupChannel mb,int chunkCounter) throws IOException, InterruptedException {
+		
+		int receivedSize = getReceivedStores().get(fileName).get(chunkCounter).size();
 
+		long delay = 1000;
+		for (int i = receivedSize; i <= repDeg; i++){
+			mb.getThread().sleep(delay);
+			mb.getSocket().send(packet);
+			System.out.println("SENDING CHUNK: " + chunkCounter);
+			delay = delay *2 ;
+			}
+	}
 }

@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by joao on 4/8/17.
- */
+
 public class FileData implements Serializable{
     private ConcurrentHashMap <String, ArrayList> files;
 
